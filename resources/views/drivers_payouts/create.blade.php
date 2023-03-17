@@ -63,7 +63,11 @@
 
            <div class="form-group col-12 text-center btm-btn">
             <button type="button" class="btn btn-primary save_restaurant_payout_btn" ><i class="fa fa-save"></i> {{trans('lang.save')}}</button>
-            <a href="{!! route('driversPayouts') !!}" class="btn btn-default"><i class="fa fa-undo"></i>{{trans('lang.cancel')}}</a>
+            <?php if($id!=''){?>
+            	<a href="{!! route('driver.payout',$id) !!}" class="btn btn-default"><i class="fa fa-undo"></i>{{trans('lang.cancel')}}</a>
+            <?php }else{ ?>
+            	<a href="{!! route('driversPayouts') !!}" class="btn btn-default"><i class="fa fa-undo"></i>{{trans('lang.cancel')}}</a>
+            <?php  } ?>		
           </div>
 
           </div>
@@ -75,8 +79,15 @@
 @section('scripts')
 
  <script>
-      var database = firebase.firestore();
-var drivers=[];
+ 
+ 	var driver_id = "<?php echo $id; ?>";
+ 	if(driver_id){
+ 		$('#select_restaurant').prop('disabled',true);	
+ 	}
+ 
+    var database = firebase.firestore();
+	var drivers=[];
+  
   async function remainingPrice(driverID){
       var remaining = 0;
       drivers.forEach((driver)=>{
@@ -128,20 +139,24 @@ var drivers=[];
     $(document).ready(function(){
         $("#data-table_processing").show();
        database.collection('users').where('role','==','driver').get().then( async function(snapshots){
-  
+ 
           snapshots.docs.forEach((listval) => {
             var data = listval.data();
               drivers.push(data);
-            $('#select_restaurant').append($("<option></option>")
-                  .attr("value", data.id)
-                  .text(data.firstName+' '+data.lastName));
+              if(driver_id == data.id){
+              	$('#select_restaurant').append($("<option></option>").attr("selected", 'selected').attr("value", data.id).text(data.firstName+' '+data.lastName));
+              }else{
+            	$('#select_restaurant').append($("<option></option>").attr("value", data.id).text(data.firstName+' '+data.lastName));  	
+              }
           })
-
       });
+      	
        $("#data-table_processing").hide();
 
     var payoutId = "<?php echo uniqid(); ?>";
+    
     $(".save_restaurant_payout_btn").click( async function(){
+    	
       var driverID = $("#select_restaurant").val();
       var remaining=await remainingPrice(driverID);
       //console.log('remaining'+remaining);

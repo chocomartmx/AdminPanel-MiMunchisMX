@@ -1,12 +1,5 @@
 @extends('layouts.app')
 
-
-
-<?php 
-
-error_reporting(E_ALL ^ E_NOTICE); 
- ?>
-
 @section('content')
         <div class="page-wrapper">
 
@@ -318,19 +311,10 @@ function searchtext(){
 }
 
 $(document).on("click","a[name='restaurant-filter-delete']", function (e) {
-        var id = this.id;
-        /* alert("This is for demo, We can't allow to delete"); */
-        
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-                if(is_disable_delete == 1){
-                    alert("Do not alllow to change in demo content !");
-                    return false;
-                }
-                
-    database.collection('vendor_filters').doc(id).delete().then(function(result){
-
-      window.location = "{{! url()->current() }}";
-    }); 
+	var id = this.id;
+	database.collection('vendor_filters').doc(id).delete().then(function(result){
+	window.location = "{{! url()->current() }}";
+}); 
 
 
 });

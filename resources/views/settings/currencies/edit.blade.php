@@ -46,6 +46,14 @@
                               </div>
                             </div>
 
+                           <div class="form-group row width-50">
+                              <label class="col-5 control-label">{{trans('lang.digit_after_decimal_point')}}</label>
+                              <div class="col-7">
+                                <input type="number" class="form-control decimal_degits" value="0">
+                                <div class="form-text text-muted">{{trans('lang.digit_after_decimal_point_help')}}</div>
+                              </div>
+                            </div>
+
                             <div class="form-check width-100">
                               <input type="checkbox" class="symbol_at_right" id="symbol_at_right">
                               <label class="col-5 control-label" for="symbol_at_right">{{trans('lang.symbole_at_right')}}</label>
@@ -89,6 +97,11 @@ $(document).ready(function(){
       $(".currency_code").val(currency.code);
       $(".currency_symbol").val(currency.symbol);
 
+      if (currency.decimal_degits) {
+          $(".decimal_degits").val(currency.decimal_degits);
+
+      }
+
       if(currency.isActive){
         $(".currency_active").prop('checked',true);
       }
@@ -106,6 +119,7 @@ $(document).ready(function(){
       var currencyName = $(".currency_name").val();
       var currencyCode = $(".currency_code").val();
       var currencySymbol = $(".currency_symbol").val();
+      var decimal_degits = $(".decimal_degits").val();
       var active = $(".currency_active").is(":checked");
       var symbolAtRight = $(".symbol_at_right").is(":checked");
         if(currencyName == ''){
@@ -119,19 +133,24 @@ $(document).ready(function(){
             $(".error_top").html("");
             $(".error_top").append("<p>{{trans('lang.enter_currency_symbol_error')}}</p>");
 
+        } else if (decimal_degits < 0) {
+                    $(".error_top").show();
+                    $(".error_top").html("");
+                    $(".error_top").append("<p>{{trans('lang.digit_after_decimal_point_error')}}</p>");
+
         }else{
             if(active){
                 database.collection('currencies').where('isActive',"==",true).get().then(function(snapshots) {    
                     var activeCurrency = snapshots.docs[0].data();
                     var activeCurrencyId = activeCurrency.id;
                     database.collection('currencies').doc(activeCurrencyId).update({'isActive':false});
-                    database.collection('currencies').doc(id).update({'name':currencyName,'code':currencyCode,'symbol':currencySymbol,'isActive':active,'symbolAtRight':symbolAtRight}).then(function(result) {
+                    database.collection('currencies').doc(id).update({'name':currencyName,'code':currencyCode,'symbol':currencySymbol,'decimal_degits': parseInt(decimal_degits),'isActive':active,'symbolAtRight':symbolAtRight}).then(function(result) {
                     window.location.href = '{{ route("currencies")}}';  
                   });
 
                 });
             }else{
-              database.collection('currencies').doc(id).update({'name':currencyName,'code':currencyCode,'symbol':currencySymbol,'isActive':active,'symbolAtRight':symbolAtRight}).then(function(result) {
+              database.collection('currencies').doc(id).update({'name':currencyName,'code':currencyCode,'symbol':currencySymbol,'decimal_degits': parseInt(decimal_degits),'isActive':active,'symbolAtRight':symbolAtRight}).then(function(result) {
                     window.location.href = '{{ route("currencies")}}';  
                   });
 

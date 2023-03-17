@@ -1,12 +1,5 @@
 @extends('layouts.app')
 
-
-
-<?php 
-
-error_reporting(E_ALL ^ E_NOTICE); 
- ?>
-
 @section('content')
         <div class="page-wrapper">
 
@@ -58,9 +51,6 @@ error_reporting(E_ALL ^ E_NOTICE);
             </li>
             <li>
                 <a href="{{route('restaurants.orders',$id)}}">{{trans('lang.tab_orders')}}</a>
-            </li>
-            <li>
-                <a href="{{route('restaurants.reviews',$id)}}">{{trans('lang.tab_reviews')}}</a>
             </li>
             <li>
                 <a href="{{route('restaurants.coupons',$id)}}">{{trans('lang.tab_promos')}}</a>
@@ -189,7 +179,6 @@ error_reporting(E_ALL ^ E_NOTICE);
                     append_list.innerHTML=html;
                     start = snapshots.docs[snapshots.docs.length - 1];
                     endarray.push(snapshots.docs[0]);
-                   disableClick();
                 }
                  if(snapshots.docs.length < pagesize){ 
                     jQuery("#data-table_paginate").hide();
@@ -383,12 +372,7 @@ function searchtext(){
 }
 
 $(document).on("click","a[name='book-table-delete']", function (e) {
-        var id = this.id;
-        var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE'); ?>";
-        if(is_disable_delete == 1){
-             alert("This is for demo, We can't allow to delete"); 
-             return false;
-        }
+     var id = this.id;
      database.collection('booked_table').doc(id).delete().then(function(result){
         window.location.href = '{{ url()->current() }}';
     });  
@@ -475,24 +459,6 @@ $(document).on("click","a[name='book-table-dismiss']", function (e) {
     });  
 
 });
-
-
-
-
-
-function disableClick(){
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE'); ?>";
-    if(is_disable_delete == 1){
-        jQuery("a.do_not_delete").removeAttr("name");
-        jQuery("a.do_not_delete").attr("name","alert_demo");       
-    }
-}
-
-
-$(document).on("click","a[name='alert_demo']", function (e) {
-    
-    alert(doNotDeleteAlert);
-}); 
 
 </script>
 

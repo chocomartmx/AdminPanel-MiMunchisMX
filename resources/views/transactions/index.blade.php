@@ -54,7 +54,7 @@ error_reporting(E_ALL ^ E_NOTICE);
                               
                             <div id="users-table_filter" class="pull-right"><label>{{trans('lang.search_by')}}
                                 <select name="selected_search" id="selected_search" class="form-control input-sm">
-                                      <option value="">{{ trans('lang.select')}}</option>
+                                      <option value="user">{{ trans('lang.food_review_user_id')}}</option>
                                       <option value="payment_status">{{ trans('lang.payment_status')}}</option>
                                 </select>
                                 <div class="form-group">
@@ -168,11 +168,17 @@ error_reporting(E_ALL ^ E_NOTICE);
 
     var currentCurrency ='';
     var currencyAtRight = false;
+    var decimal_degits = 0;
+
     var refCurrency = database.collection('currencies').where('isActive', '==' , true);
     refCurrency.get().then( async function(snapshots){
         var currencyData = snapshots.docs[0].data();
         currentCurrency = currencyData.symbol;
         currencyAtRight = currencyData.symbolAtRight;
+
+        if (currencyData.decimal_degits) {
+            decimal_degits = currencyData.decimal_degits;
+        }
     });
 
 $(document).ready(function() {
@@ -228,11 +234,15 @@ $(document).ready(function() {
             
             const payoutuser = payoutuserfunction(val.user_id);
             html = html+'<td class="user_'+val.user_id+' redirecttopage" ></td>';
+            amount = val.amount;
+            if (!isNaN(amount)) {
+                amount = parseFloat(amount).toFixed(decimal_degits);
 
-            if(currencyAtRight){
-              html = html+'<td>'+val.amount+''+currentCurrency+'</td>';  
-            }else{
-              html = html+'<td>'+currentCurrency+''+val.amount+'</td>';
+            }
+            if (currencyAtRight) {
+                html = html + '<td>' + parseFloat(amount).toFixed(decimal_degits) + '' + currentCurrency + '</td>';
+            } else {
+                html = html + '<td>' + currentCurrency + '' + parseFloat(amount).toFixed(decimal_degits) + '</td>';
             }
             var date = "";
             var time = "";
@@ -268,12 +278,8 @@ function prev(){
 
         if(jQuery("#selected_search").val()=='payment_status' && jQuery("#search").val().trim()!=''){
           listener = ref.orderBy('payment_status').limit(pagesize).startAt(jQuery("#search").val()).endAt(jQuery("#search").val()+'\uf8ff').startAt(end).get();
-
-            }else{
-                    listener = ref.startAt(end).limit(pagesize).get();
-            }
-                
-                listener.then((snapshots) => {
+       
+          listener.then((snapshots) => {
                 html='';
                 html=buildHTML(snapshots);
                 jQuery("#data-table_processing").hide();
@@ -289,6 +295,58 @@ function prev(){
                     
                 }
             });
+        }else if (jQuery("#selected_search").val() == 'user' && jQuery("#search").val().trim() != '') {
+
+            var vendors = database.collection('users').orderBy('firstName').startAt(jQuery("#search").val()).endAt(jQuery("#search").val() + '\uf8ff').get();
+
+            vendors.then(async function (snapshots) {
+
+            if (snapshots.docs.length > 0) {
+        var data = snapshots.docs[0].data();
+
+        listener = refData.orderBy('user_id').limit(pagesize).startAt(data.id).endAt(data.id + '\uf8ff').startAfter(start).get();
+
+        listener.then((snapshotsInner) => {
+            html = '';
+            html = buildHTML(snapshotsInner);
+            jQuery("#data-table_processing").hide();
+
+            if (html != '') {
+                append_list.innerHTML = html;
+                start = snapshotsInner.docs[snapshotsInner.docs.length - 1];
+                endarray.splice(endarray.indexOf(endarray[endarray.length - 1]), 1);
+
+                if (snapshotsInner.docs.length < pagesize) {
+
+                    jQuery("#users_table_previous_btn").hide();
+                }
+
+            }
+        });
+    }
+});
+        
+        }else{
+                    listener = ref.startAt(end).limit(pagesize).get();
+                    listener.then((snapshots) => {
+                html='';
+                html=buildHTML(snapshots);
+                jQuery("#data-table_processing").hide();
+                if(html!=''){
+                    append_list.innerHTML=html;
+                    start = snapshots.docs[snapshots.docs.length - 1];
+                    endarray.splice(endarray.indexOf(endarray[endarray.length-1]),1);
+
+                    if(snapshots.docs.length < pagesize){ 
+   
+                        jQuery("#users_table_previous_btn").hide();
+                    }
+                    
+                }
+            });
+            }
+                
+            
   }
 }
 
@@ -299,27 +357,75 @@ function next(){
             if(jQuery("#selected_search").val()=='payment_status' && jQuery("#search").val().trim()!=''){
 
         listener = ref.orderBy('payment_status').limit(pagesize).startAt(jQuery("#search").val()).endAt(jQuery("#search").val()+'\uf8ff').startAfter(start).get();
+        listener.then((snapshots) => {
+            
+            html='';
+            html=buildHTML(snapshots);
+            console.log(snapshots);
+            jQuery("#data-table_processing").hide();
+            if(html!=''){
+                append_list.innerHTML=html;
+                start = snapshots.docs[snapshots.docs.length - 1];
 
+
+                if(endarray.indexOf(snapshots.docs[0])!=-1){
+                    endarray.splice(endarray.indexOf(snapshots.docs[0]),1);
+                }
+                endarray.push(snapshots.docs[0]);
+            }
+        });
+
+    }else if (jQuery("#selected_search").val() == 'user' && jQuery("#search").val().trim() != '') {
+
+            var vendors = database.collection('users').orderBy('firstName').startAt(jQuery("#search").val()).endAt(jQuery("#search").val() + '\uf8ff').get();
+
+            vendors.then(async function (snapshots) {
+
+            if (snapshots.docs.length > 0) {
+            var data = snapshots.docs[0].data();
+
+            listener = refData.orderBy('user_id').limit(pagesize).startAt(data.id).endAt(data.id + '\uf8ff').startAfter(start).get();
+
+            listener.then((snapshotsInner) => {
+            html = '';
+            html = buildHTML(snapshotsInner);
+            jQuery("#data-table_processing").hide();
+
+            if (html != '') {
+                append_list.innerHTML = html;
+                start = snapshotsInner.docs[snapshotsInner.docs.length - 1];
+                endarray.splice(endarray.indexOf(endarray[endarray.length - 1]), 1);
+
+                if (snapshotsInner.docs.length < pagesize) {
+
+                    jQuery("#users_table_previous_btn").hide();
+                }
+
+            }
+            });
+            }
+            });
         } else{
                 listener = ref.startAfter(start).limit(pagesize).get();
-            }
-          listener.then((snapshots) => {
+                listener.then((snapshots) => {
             
-                html='';
-                html=buildHTML(snapshots);
-                console.log(snapshots);
-                jQuery("#data-table_processing").hide();
-                if(html!=''){
-                    append_list.innerHTML=html;
-                    start = snapshots.docs[snapshots.docs.length - 1];
+            html='';
+            html=buildHTML(snapshots);
+            console.log(snapshots);
+            jQuery("#data-table_processing").hide();
+            if(html!=''){
+                append_list.innerHTML=html;
+                start = snapshots.docs[snapshots.docs.length - 1];
 
 
-                    if(endarray.indexOf(snapshots.docs[0])!=-1){
-                        endarray.splice(endarray.indexOf(snapshots.docs[0]),1);
-                    }
-                    endarray.push(snapshots.docs[0]);
+                if(endarray.indexOf(snapshots.docs[0])!=-1){
+                    endarray.splice(endarray.indexOf(snapshots.docs[0]),1);
                 }
-            });
+                endarray.push(snapshots.docs[0]);
+            }
+        });
+            }
+         
     }
 }
 
@@ -339,13 +445,7 @@ function searchtext(){
 
      wherequery=refData.orderBy('payment_status').limit(pagesize).startAt(jQuery("#search").val()).endAt(jQuery("#search").val()+'\uf8ff').get();
 
-   } else{
-
-    wherequery=ref.limit(pagesize).get();
-   }
-
-
-  wherequery.then((snapshots) => {
+     wherequery.then((snapshots) => {
     html='';
     html=buildHTML(snapshots);
     jQuery("#data-table_processing").hide();
@@ -363,6 +463,63 @@ function searchtext(){
         }
     }
 }); 
+
+    }else if (jQuery("#selected_search").val() == 'user' && jQuery("#search").val().trim() != '') {
+
+            var vendors = database.collection('users').orderBy('firstName').startAt(jQuery("#search").val()).endAt(jQuery("#search").val() + '\uf8ff').get();
+
+            vendors.then(async function (snapshots) {
+
+            if (snapshots.docs.length > 0) {
+            var data = snapshots.docs[0].data();
+
+            wherequery = refData.orderBy('user_id').limit(pagesize).startAt(data.id).endAt(data.id + '\uf8ff').get();
+
+            wherequery.then((snapshotsInner) => {
+            html = '';
+            html = buildHTML(snapshotsInner);
+            jQuery("#data-table_processing").hide();
+
+            if (html != '') {
+                append_list.innerHTML = html;
+                start = snapshotsInner.docs[snapshotsInner.docs.length - 1];
+                endarray.splice(endarray.indexOf(endarray[endarray.length - 1]), 1);
+
+                if (snapshotsInner.docs.length < pagesize) {
+
+                    jQuery("#users_table_previous_btn").hide();
+                }
+
+            }
+            });
+            }
+            });
+   } else{
+
+    wherequery=ref.limit(pagesize).get();
+
+    wherequery.then((snapshots) => {
+    html='';
+    html=buildHTML(snapshots);
+    jQuery("#data-table_processing").hide();
+    if(html!=''){
+        append_list.innerHTML=html;
+        start = snapshots.docs[snapshots.docs.length - 1];
+        endarray.push(snapshots.docs[0]);
+        /*if(snapshots.docs.length<pagesize && jQuery("#selected_search").val().trim()!='' && jQuery("#search").val().trim()!=''){*/
+        if(snapshots.docs.length < pagesize){ 
+   
+            jQuery("#data-table_paginate").hide();
+        }else{
+
+            jQuery("#data-table_paginate").show();
+        }
+    }
+}); 
+
+   }
+
+
 
 }
 

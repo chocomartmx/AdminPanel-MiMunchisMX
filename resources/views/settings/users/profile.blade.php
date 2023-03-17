@@ -1,8 +1,5 @@
 @extends('layouts.app')
 
-
-
-
 @section('content')
 <div class="page-wrapper">
 	<div class="row page-titles">
@@ -100,24 +97,5 @@
 @endsection
 
 @section('scripts')
-<script>
-    $(document).ready(function(){
-        disableClick();
-    })
 
-function disableClick(){
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE'); ?>";
-    if(is_disable_delete == 1){
-        $('.save_user_btn').addClass("alert_demo");
-        $('.save_user_btn').attr("type","button");       
-    }
-}
-
-
-$(document).on("click",".alert_demo", function (e) {
-    $('.error_top').hide();
-      alert("We can not allow to change");
-});
-
-</script>
 @endsection

@@ -75,11 +75,6 @@
 
         $(".save_map_key_button").click(function () {
 
-            var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-            if (is_disable_delete == 1) {
-                alert("Do not alllow to change in demo content !");
-                return false;
-            }
             var mapKey = $(".google_map_key").val();
             database.collection('settings').doc('googleMapKey').update({'key': mapKey}).then(function (result) {
 

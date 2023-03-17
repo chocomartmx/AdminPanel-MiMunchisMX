@@ -83,7 +83,7 @@
 
                     </div>
 
-                    <div class="form-group row width-100">
+                    <div class="form-group row width-50">
 
                     <label class="col-3 control-label">{{trans('lang.photo')}}</label>
 
@@ -92,7 +92,71 @@
                     <div id="uploding_image"></div>
 
                     <div class="placeholder_img_thumb user_image"></div>
-                    </div>        
+                    </div>  
+                    <div class="form-group row width-50" id="banner_position">
+                        <label class="col-3 control-label ">{{trans('lang.banner_position')}}</label>
+                        <div class="col-7">
+                            <select name="position" id="position" class="form-control">
+                                <option value="top">{{trans('lang.top')}}</option>
+                                <option value="middle">{{trans('lang.middle')}}</option>
+                            </select>
+                        </div>
+                    </div> 
+                    <div class="form-group row width-100 radio-form-row d-flex" id="redirect_type_div"
+                            >
+                            <div class="radio-form col-md-2">
+                                <input type="radio"
+                                       class="redirect_type"
+                                       value="store" name="redirect_type" id="store">
+                                <label class="custom-control-label">{{trans('lang.vendor')}}</label>
+                            </div>
+
+                            <div class="radio-form col-md-2">
+                                <input type="radio"
+                                       class="redirect_type"
+                                       value="product" name="redirect_type" id="product">
+
+                                <label class="custom-control-label">{{trans('lang.product')}}</label>
+                            </div>
+
+                            <div class="radio-form col-md-4">
+                                <input type="radio"
+                                       class="redirect_type"
+                                       value="external_link" name="redirect_type" >
+
+                                <label class="custom-control-label">{{trans('lang.external_link')}}</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group row width-50" id="vendor_div" style="display: none;">
+                            <label class="col-3 control-label ">{{trans('lang.vendor')}}</label>
+                            <div class="col-7">
+                                <select name="storeId" id="storeId" class="form-control">
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row width-50" id="product_div" style="display: none;">
+                            <label class="col-3 control-label ">{{trans('lang.product')}}</label>
+                            <div class="col-7">
+                                <select name="productId" id="productId" class="form-control">
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row width-100" id="external_link_div" style="display: none;">
+
+                            <label class="col-3 control-label">{{trans('lang.external_link')}}</label>
+
+                            <div class="col-7">
+
+                                <input type="text" class="form-control" id="external_link" >
+
+                            </div>
+
+                        </div>      
 
                 </fieldset>   
 
@@ -126,14 +190,39 @@
   var photo ="";
 
   var storageRef = firebase.storage().ref('images');
+  $("input[name='redirect_type']:radio").change(function () {
+
+var redirect_type = $(this).val();
+
+
+if (redirect_type == "store") {
+
+    getTypeWiseDetails('store');
+
+
+    $('#vendor_div').show();
+    $('#product_div').hide();
+    $('#external_link_div').hide();
+} else if (redirect_type == "product") {
+
+    getTypeWiseDetails('product');
+
+
+    $('#vendor_div').hide();
+    $('#product_div').show();
+    $('#external_link_div').hide();
+} else if (redirect_type == "external_link") {
+    $('#vendor_div').hide();
+    $('#product_div').hide();
+    $('#external_link_div').show();
+}
+
+});
+
+
 
 function handleFileSelect(evt) {
 
-        var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE',0); ?>";
-        if(is_disable_delete == 1){
-            alert("Do not alllow to change in demo content !");
-            return false;    
-        }
         var f = evt.target.files[0];
 
         var reader = new FileReader();
@@ -159,7 +248,7 @@ function handleFileSelect(evt) {
 
 
             var timestamp = Number(new Date());      
-
+            var filename = filename.split('.')[0] + "_" + timestamp + '.' + ext;
             var uploadTask = storageRef.child(filename).put(theFile);
 
             console.log(uploadTask);
@@ -206,15 +295,49 @@ function handleFileSelect(evt) {
 
 $(".create_banner_btn").click(function(){
 
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE',0); ?>";
-    if(is_disable_delete == 1){
-        alert("Do not alllow to change in demo content !");
-        return false;    
-    }
-    
     var title = $(".title").val();
+    var position = $("#position").val();
     var set_order = parseInt($('.set_order').val());
     var is_publish =false;
+    var redirect_type = "";
+
+    if ($(".redirect_type").is(":visible")) {
+        redirect_type = $(".redirect_type:checked").val();
+
+    }
+
+    var redirect_id = "";
+
+    var checkFlag = true;
+    var checkFlagRedirection = true;
+    if (redirect_type == "store") {
+        redirect_id = $('#storeId').val();
+
+        if (redirect_id == "") {
+            checkFlag = false;
+            checkFlagRedirection = "store";
+        }
+
+
+    } else if (redirect_type == "product") {
+        redirect_id = $('#productId').val();
+
+        if (redirect_id == "") {
+            checkFlag = false;
+            checkFlagRedirection = "product";
+
+        }
+
+    } else if (redirect_type == "external_link") {
+        redirect_id = $('#external_link').val();
+
+        if (redirect_id == "") {
+            checkFlag = false;
+            checkFlagRedirection = "external_link";
+
+        }
+    }
+
 
       if($("#is_publish").is(':checked')){
 
@@ -240,11 +363,29 @@ $(".create_banner_btn").click(function(){
         $(".error_top").append("<p>{{trans('lang.set_order_error')}}</p>");
 
         window.scrollTo(0, 0);
-    }else{
+    }
+    else if (checkFlag == false) {
+                $(".error_top").show();
+
+                $(".error_top").html("");
+
+                if (checkFlagRedirection == "external_link") {
+                    $(".error_top").append("Please Enter External Redirection Link");
+
+                } else {
+                    $(".error_top").append("Please Select " + checkFlagRedirection);
+
+                }
+
+                window.scrollTo(0, 0);
+            }else{
 
         var id = "<?php echo uniqid(); ?>";
 
-        database.collection('menu_items').doc(id).set({'title':title,'photo':photo,'id':id,'set_order':set_order,'is_publish':is_publish}).then(function(result){
+        database.collection('menu_items').doc(id).set({'title':title,'photo':photo,'id':id,'set_order':set_order,
+            'is_publish':is_publish,'position':position,
+            'redirect_type': redirect_type,
+                    'redirect_id': redirect_id}).then(function(result){
             window.location.href = '{{ route("setting.banners")}}';
 
         }) .catch(function (error) {
@@ -255,6 +396,41 @@ $(".create_banner_btn").click(function(){
         });
     }
 });
+function getTypeWiseDetails(redirect_type, sectionId) {
+
+if (redirect_type == "store") {
+
+    $('#storeId').html("");
+    $('#storeId').append($("<option value=''>Select Store</option>"));
+
+    var ref_vendors = database.collection('vendors');
+
+    ref_vendors.get().then(async function (snapshots) {
+
+        snapshots.docs.forEach((listval) => {
+            var data = listval.data();
+            $('#storeId').append($("<option></option>")
+                .attr("value", data.id)
+                .text(data.title));
+        })
+    })
+} else if (redirect_type == "product") {
+    $('#productId').html("");
+    $('#productId').append($("<option value=''>Select Product</option>"));
+    var ref_vendor_products = database.collection('vendor_products');
+
+    ref_vendor_products.get().then(async function (snapshots) {
+
+        snapshots.docs.forEach((listval) => {
+            var data = listval.data();
+
+            $('#productId').append($("<option></option>")
+                .attr("value", data.id)
+                .text(data.name));
+        })
+    })
+}
+}
 
 
 </script>

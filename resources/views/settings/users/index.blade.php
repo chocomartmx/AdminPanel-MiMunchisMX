@@ -1,12 +1,5 @@
 @extends('layouts.app')
 
-
-
-<?php 
-
-error_reporting(E_ALL ^ E_NOTICE); 
- ?>
-
 @section('content')
 <div class="page-wrapper">
     <!-- ============================================================== -->
@@ -54,9 +47,15 @@ error_reporting(E_ALL ^ E_NOTICE);
                             </div>
                         </div>
                         <div class="table-responsive m-t-10">
-                            <table id="example24" class="display nowrap table table-hover table-striped table-bordered table table-striped" cellspacing="0" width="100%">
+                            <table id="userTable" class="display nowrap table table-hover table-striped table-bordered table table-striped" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
+                                    <th class="delete-all"><input type="checkbox" id="is_active"><label
+                                            class="col-3 control-label" for="is_active"
+                                    ><a id="deleteAll" class="do_not_delete"
+                                        href="javascript:void(0)"><i
+                                                    class="fa fa-trash"></i> {{trans('lang.all')}}</a></label></th>
+
                                         <th>{{trans('lang.extra_image')}}</th>
                                         <th >{{trans('lang.user_name')}}</th>
                                         <th>{{trans('lang.email')}}</th>
@@ -90,52 +89,10 @@ error_reporting(E_ALL ^ E_NOTICE);
 </div>
 </div>
 
-
-
 @endsection
 
-
-
- <!--     <script src="assets/plugins/jquery/jquery.min.js"></script>
-
-    <script src="assets/plugins/bootstrap/js/popper.min.js"></script>
-    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="js/jquery.slimscroll.js"></script>
-
-    <script src="js/waves.js"></script>
-
-    <script src="js/sidebarmenu.js"></script>
-
-    <script src="assets/plugins/sticky-kit-master/dist/sticky-kit.min.js"></script> 
-
-    <script src="assets/plugins/sparkline/jquery.sparkline.min.js"></script>
-
-    <script src="js/custom.min.js"></script> 
-
-    <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script> 
-
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
-
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
-    <script src="assets/plugins/styleswitcher/jQuery.style.switcher.js"></script>
-    <script src="assets/plugins/toast-master/js/jquery.toast.js"></script>
-    <script src="js/toastr.js"></script>
- -->
-
-
-
 @section('scripts')
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+
     <script src="https://www.gstatic.com/firebasejs/8.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.0/firebase-database.js"></script>
@@ -212,7 +169,7 @@ error_reporting(E_ALL ^ E_NOTICE);
             if(snapshots.docs.length<pagesize){
                 jQuery("#data-table_paginate").hide();
             }
-            disableClick();
+            
          }
       }); 
      
@@ -254,7 +211,8 @@ error_reporting(E_ALL ^ E_NOTICE);
 
                 var trroute1 =  '{{route("users.walletstransaction",":id")}}';
                 trroute1 = trroute1.replace(':id', id);
-
+                html = html + '<td class="delete-all"><input type="checkbox" id="is_open_' + id + '" class="is_open" dataId="' + id + '"><label class="col-3 control-label"\n' +
+                'for="is_open_' + id + '" ></label></td>';
                 if(val.profilePictureURL == ''){
                   
                       html=html+'<td><img class="rounded" style="width:50px" src="'+placeholderImage+'" alt="image"></td>';
@@ -276,6 +234,48 @@ error_reporting(E_ALL ^ E_NOTICE);
                 count =count +1;
           });
           return html;      
+    }
+    $("#is_active").click(function () {
+        $("#userTable .is_open").prop('checked', $(this).prop('checked'));
+
+    });
+
+    $("#deleteAll").click(function () {
+        if ($('#userTable .is_open:checked').length) {
+            if (confirm('Are You Sure want to Delete Selected Data ?')) {
+                jQuery("#data-table_processing").show();
+                $('#userTable .is_open:checked').each(function () {
+                    var dataId = $(this).attr('dataId');
+
+                    database.collection('users').doc(dataId).delete().then(function () {
+
+                        const getStoreName = deleteUserData(dataId);
+
+                        window.location.reload();
+                    });
+
+                });
+
+            }
+        } else {
+            alert('Please Select Any One Record .');
+        }
+    });
+    
+    async function deleteUserData(userId) {
+                    await database.collection('wallet').where('user_id', '==', userId).get().then(async function (snapshotsItem) {
+
+            if (snapshotsItem.docs.length > 0) {
+                snapshotsItem.docs.forEach((temData) => {
+                    var item_data = temData.data();
+
+                    database.collection('wallet').doc(item_data.id).delete().then(function () {
+
+                    });
+                });
+            }
+
+            });
     }
 
     function prev(){
@@ -434,46 +434,15 @@ error_reporting(E_ALL ^ E_NOTICE);
     }
 
 
-
-/*$(document).on("click","a[name='restaurant-active']", function (e) {
-        var id = this.id;
-        console.log(id);
-    database.collection('vendors').doc(id).update({'isActive':true}).then(function(result) {
-                
-                window.location.reload();
-
-    });
-}); */
      $(document).on("click","a[name='user-delete']", function (e) {
-            var id = this.id;
-            
-            var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE'); ?>";
-            if(is_disable_delete == 1){
-                alert(doNotDeleteAlert);
-                return false;
-            }
+         var id = this.id;
          database.collection('users').doc(id).delete().then(function(result){
+            const getStoreName = deleteUserData(id);
             window.location.href = '{{ url()->current() }}';
         }); 
 
 
     });
-
-     function disableClick(){
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE'); ?>";
-    if(is_disable_delete == 1){
-        jQuery("a.do_not_delete").removeAttr("name");
-        jQuery("a.do_not_delete").attr("name","alert_demo");       
-    }
-}
-
-
-$(document).on("click","a[name='alert_demo']", function (e) {
-    
-    //alert("This is for demo, We can not allow to delete");
-    alert(doNotDeleteAlert);
-}); 
-
 
 </script>
 

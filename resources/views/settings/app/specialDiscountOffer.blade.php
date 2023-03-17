@@ -60,7 +60,7 @@
           }
 
           try{
-              if(specialDiscountOffer.isEnabled){
+              if(specialDiscountOffer.isEnable){
                   $("#enable_special_discount").prop('checked',true);
                 
               }
@@ -75,14 +75,9 @@
 
         $(".save_special_offer").click(function(){
 
-          var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE',0); ?>";
-          if(is_disable_delete == 1){
-            alert("Do not alllow to change in demo content !");
-            return false;    
-          }
           var checkboxValue = $("#enable_special_discount").is(":checked");
           
-              database.collection('settings').doc("specialDiscountOffer").update({'isEnabled':checkboxValue}).then(function(result) {
+              database.collection('settings').doc("specialDiscountOffer").update({'isEnable':checkboxValue}).then(function(result) {
                             window.location.href = '{{ url("settings/app/specialOffer")}}';
                         
                 });         

@@ -1,12 +1,5 @@
 @extends('layouts.app')
 
-
-
-<?php 
-
-error_reporting(E_ALL ^ E_NOTICE); 
- ?>
-
 @section('content')
         <div class="page-wrapper">
 
@@ -51,10 +44,7 @@ error_reporting(E_ALL ^ E_NOTICE);
                                     <li>
                                             <a href="{{route('restaurants.orders',$id)}}">{{trans('lang.tab_orders')}}</a>
                                     </li>
-                                    <li>
-                                            <a href="{{route('restaurants.reviews',$id)}}">{{trans('lang.tab_reviews')}}</a>
-                                    </li>
-                                    <li>
+                                   	<li>
                                             <a href="{{route('restaurants.coupons',$id)}}">{{trans('lang.tab_promos')}}</a>
                                     <li class="active">
                                             <a href="{{route('restaurants.payout',$id)}}">{{trans('lang.tab_payouts')}}</a>
@@ -62,9 +52,6 @@ error_reporting(E_ALL ^ E_NOTICE);
                                     <li >
                                         <a href="{{route('restaurants.booktable',$id)}}">{{trans('lang.dine_in_future')}}</a>
                                     </li>                                 
-                                    <!-- <li>
-                                        <a href="{{route('restaurants.coupons',$id)}}">{{trans('lang.tab_coupons')}}</a>
-                                    </li> -->
                                 </ul>
                           </div>
                       <?php } ?>
@@ -96,6 +83,8 @@ error_reporting(E_ALL ^ E_NOTICE);
                             <div id="users-table_filter" class="pull-right"><label>{{trans('lang.search_by')}}
                                 <select name="selected_search" id="selected_search" class="form-control input-sm">
                                       <option value="note">{{ trans('lang.restaurants_payout_note')}}</option>
+                                      <option value="restaurant">{{trans('lang.restaurant_plural')}}</option>
+
                                 </select>
                                 <div class="form-group">
                                 <input type="search" id="search" class="search form-control" placeholder="Search" ></label>&nbsp;<button onclick="searchtext();" class="btn btn-warning btn-flat">{{trans('lang.search')}}</button>&nbsp;<button onclick="searchclear();" class="btn btn-warning btn-flat">{{trans('lang.clear')}}</button>
@@ -191,11 +180,17 @@ error_reporting(E_ALL ^ E_NOTICE);
     
     var currentCurrency ='';
     var currencyAtRight = false;
+    var decimal_degits = 0;
+
     var refCurrency = database.collection('currencies').where('isActive', '==' , true);
     refCurrency.get().then( async function(snapshots){
         var currencyData = snapshots.docs[0].data();
         currentCurrency = currencyData.symbol;
         currencyAtRight = currencyData.symbolAtRight;
+
+        if (currencyData.decimal_degits) {
+            decimal_degits = currencyData.decimal_degits;
+        }
     });
 
     // var ref = database.collection('vendors');
@@ -281,10 +276,10 @@ $(document).ready(function() {
                 price=0;
             }
 
-            if(currencyAtRight){
-                price_val = price+""+currentCurrency;
-            }else{
-                 price_val = currentCurrency+""+price;
+            if (currencyAtRight) {
+                price_val = parseFloat(price).toFixed(decimal_degits) + "" + currentCurrency;
+            } else {
+                price_val = currentCurrency + "" + parseFloat(price).toFixed(decimal_degits);
             }
             html=html+'<tr>';
             <?php if($id ==''){ ?>
@@ -324,7 +319,52 @@ function prev(){
 
         if(jQuery("#selected_search").val()=='note' && jQuery("#search").val().trim()!=''){
           listener = refData.orderBy('note').limit(pagesize).startAt(jQuery("#search").val()).endAt(jQuery("#search").val()+'\uf8ff').startAt(end).get();
+          listener.then((snapshots) => {
+                    html = '';
+                    html = buildHTML(snapshots);
+                    jQuery("#data-table_processing").hide();
+                    if (html != '') {
+                        append_list.innerHTML = html;
+                        start = snapshots.docs[snapshots.docs.length - 1];
+                        console.log(start);
+                        endarray.splice(endarray.indexOf(endarray[endarray.length - 1]), 1);
 
+                        if (snapshots.docs.length < pagesize) {
+
+                            jQuery("#users_table_previous_btn").hide();
+                        }
+
+                    }
+                });
+            }else if (jQuery("#selected_search").val() == 'restaurant' && jQuery("#search").val().trim() != '') {
+            title = jQuery("#search").val();
+
+            database.collection('vendors').where('title', '==', title).get().then(async function (snapshots) {
+
+                if (snapshots.docs.length > 0) {
+                    var storedata = snapshots.docs[0].data();
+
+                    listener = refData.orderBy('vendorID').limit(pagesize).startAt(storedata.id).endAt(storedata.id + '\uf8ff').get();
+                    
+                    listener.then((snapshotsInner) => {
+                        html = '';
+                        html = buildHTML(snapshotsInner);
+                        jQuery("#data-table_processing").hide();
+                        if (html != '') {
+                            append_list.innerHTML = html;
+                            start = snapshotsInner.docs[snapshotsInner.docs.length - 1];
+                            endarray.push(snapshotsInner.docs[0]);
+                            if (snapshotsInner.docs.length < pagesize) {
+
+                                jQuery("#data-table_paginate").hide();
+                            } else {
+
+                                jQuery("#data-table_paginate").show();
+                            }
+                        }
+                    });
+                }
+            });
         }else{
                     listener = ref.startAt(end).limit(pagesize).get();
                 }
@@ -355,27 +395,61 @@ function next(){
             if(jQuery("#selected_search").val()=='note' && jQuery("#search").val().trim()!=''){
 
         listener = refData.orderBy('note').limit(pagesize).startAt(jQuery("#search").val()).endAt(jQuery("#search").val()+'\uf8ff').startAfter(start).get();
+            }else if (jQuery("#selected_search").val() == 'restaurant' && jQuery("#search").val().trim() != '') {
+            title = jQuery("#search").val();
+
+            database.collection('vendors').where('title', '==', title).get().then(async function (snapshots) {
+
+                if (snapshots.docs.length > 0) {
+                    var storedata = snapshots.docs[0].data();
+
+                    listener = refData.orderBy('vendorID').limit(pagesize).startAt(storedata.id).endAt(storedata.id + '\uf8ff').get();
+                    
+                    listener.then((snapshotsInner) => {
+                        html = '';
+                        html = buildHTML(snapshotsInner);
+                        jQuery("#data-table_processing").hide();
+                        if (html != '') {
+                            append_list.innerHTML = html;
+                            start = snapshotsInner.docs[snapshotsInner.docs.length - 1];
+                            endarray.push(snapshotsInner.docs[0]);
+                            if (snapshotsInner.docs.length < pagesize) {
+
+                                jQuery("#data-table_paginate").hide();
+                            } else {
+
+                                jQuery("#data-table_paginate").show();
+                            }
+                        }
+                    });
+                } else {
+                    jQuery("#data-table_processing").hide();
+                }
+
+            });
 
         } else{
                 listener = ref.startAfter(start).limit(pagesize).get();
-            }
-          listener.then((snapshots) => {
+
+                listener.then((snapshots) => {
             
-                html='';
-                html=buildHTML(snapshots);
-                console.log(snapshots);
-                jQuery("#data-table_processing").hide();
-                if(html!=''){
-                    append_list.innerHTML=html;
-                    start = snapshots.docs[snapshots.docs.length - 1];
+            html='';
+            html=buildHTML(snapshots);
+            console.log(snapshots);
+            jQuery("#data-table_processing").hide();
+            if(html!=''){
+                append_list.innerHTML=html;
+                start = snapshots.docs[snapshots.docs.length - 1];
 
 
-                    if(endarray.indexOf(snapshots.docs[0])!=-1){
-                        endarray.splice(endarray.indexOf(snapshots.docs[0]),1);
-                    }
-                    endarray.push(snapshots.docs[0]);
+                if(endarray.indexOf(snapshots.docs[0])!=-1){
+                    endarray.splice(endarray.indexOf(snapshots.docs[0]),1);
                 }
-            });
+                endarray.push(snapshots.docs[0]);
+            }
+        });
+            }
+        
     }
 }
 
@@ -395,12 +469,63 @@ function searchtext(){
 
      wherequery=refData.orderBy('note').limit(pagesize).startAt(jQuery("#search").val()).endAt(jQuery("#search").val()+'\uf8ff').get();
 
-   }else{
+     wherequery.then((snapshots) => {
+                    html = '';
+                    html = buildHTML(snapshots);
+                    jQuery("#data-table_processing").hide();
+                    if (html != '') {
+                        append_list.innerHTML = html;
+                        start = snapshots.docs[snapshots.docs.length - 1];
+                        console.log(start);
+                        endarray.splice(endarray.indexOf(endarray[endarray.length - 1]), 1);
+
+                        if (snapshots.docs.length < pagesize) {
+
+                            jQuery("#users_table_previous_btn").hide();
+                        }
+
+                    }
+                });
+
+                
+   }else if (jQuery("#selected_search").val() == 'restaurant' && jQuery("#search").val().trim() != '') {
+            title = jQuery("#search").val();
+
+            database.collection('vendors').where('title', '==', title).get().then(async function (snapshots) {
+
+                if (snapshots.docs.length > 0) {
+                    var storedata = snapshots.docs[0].data();
+
+                    wherequery = refData.orderBy('vendorID').limit(pagesize).startAt(storedata.id).endAt(storedata.id + '\uf8ff').get();
+                    
+                    wherequery.then((snapshotsInner) => {
+                        html = '';
+                        html = buildHTML(snapshotsInner);
+                        jQuery("#data-table_processing").hide();
+                        if (html != '') {
+                            append_list.innerHTML = html;
+                            start = snapshotsInner.docs[snapshotsInner.docs.length - 1];
+                            endarray.push(snapshotsInner.docs[0]);
+                            if (snapshotsInner.docs.length < pagesize) {
+
+                                jQuery("#data-table_paginate").hide();
+                            } else {
+
+                                jQuery("#data-table_paginate").show();
+                            }
+                        }
+                    });
+                } else {
+                    jQuery("#data-table_processing").hide();
+                }
+
+            });
+
+        }else{
 
     wherequery=ref.limit(pagesize).get();
-   }
-  
-  wherequery.then((snapshots) => {
+
+    wherequery.then((snapshots) => {
     html='';
     html=buildHTML(snapshots);
     jQuery("#data-table_processing").hide();
@@ -418,6 +543,9 @@ function searchtext(){
     }
 }); 
 
+   }
+  
+ 
 }
 
 

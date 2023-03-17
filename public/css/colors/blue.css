@@ -127,22 +127,31 @@ a.link:hover, a.link:focus {
 /*sidebar navigation
 *******************/
 .label-themecolor {
-  background: #ff683a;
+  background: #FF683A;
 }
 
 .sidebar-nav > ul > li.active > a {
-  color: #ff683a;
-  border-color: #ff683a;
+  color: #FF683A;
+border-color: #731a00;
+background: rgba(255,255,255,0.9);
 }
 
 .sidebar-nav > ul > li.active > a i {
-  color: #ff683a;
+  color: #FF683A;
 }
 
-.sidebar-nav ul li a.active, .sidebar-nav ul li a:hover {
-  color: #ff683a;
+.sidebar-nav ul li a:hover{color: #FF683A;
+border-color: #731a00;
+background: rgba(255,255,255,0.9);}
+
+.sidebar-nav ul li a.active, .sidebar-nav ul li a.active:hover,.sidebar-nav ul li.active a.has-arrow:hover {
+  color: #731a00;background: rgba(255,255,255,0.8);
 }
 
-.sidebar-nav ul li a.active i, .sidebar-nav ul li a:hover i {
-  color: #ff683a;
+.sidebar-nav ul li a:hover i{color: #FF683A;}
+.sidebar-nav ul li a.active i, .sidebar-nav ul li a.active:hover i,.sidebar-nav ul li.active a:hover i {
+  color: #731a00;
 }
+
+.sidebar-nav .active > .has-arrow::after, .sidebar-nav li > .has-arrow.active::after, .sidebar-nav .has-arrow[aria-expanded="true"]::after {border-color: #731a00;}
+.sidebar-nav ul li a.has-arrow:hover::after{border-color: #FF683A;}

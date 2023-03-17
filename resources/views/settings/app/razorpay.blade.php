@@ -261,12 +261,6 @@
 
             $(".save_razorpay_btn").click(function () {
 
-                var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-                if (is_disable_delete == 1) {
-                    alert("Do not alllow to change in demo content !");
-                    return false;
-                }
-
                 var razorpayKey = $(".razorpay_key").val();
                 var razorpaySecret = $(".razorpay_secret").val();
                 var isRazorpayenabled = $(".enable_razorpay").is(":checked");

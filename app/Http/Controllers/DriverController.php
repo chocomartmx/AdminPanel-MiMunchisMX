@@ -23,7 +23,10 @@ class DriverController extends Controller
     {
         return view('drivers.create');
     }
-
+    public function view($id)
+    {
+        return view('drivers.view')->with('id', $id);
+    }
 }
 
 

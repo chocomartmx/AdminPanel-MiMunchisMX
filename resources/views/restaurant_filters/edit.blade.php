@@ -107,14 +107,6 @@ $(document).ready(function(){
 
   
   $(".save_filter_btn").click(function(){
-      //var photo ="https://assets.bonappetit.com/photos/5d03bea59ffc67bff3c6f86e/master/pass/HLY_Lentil_Burger_Horizontal.jpg";
-
-      
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-                if(is_disable_delete == 1){
-                    alert("Do not alllow to change in demo content !");
-                    return false;
-                }
                 
       var filterName = $(".filter_name").val();
       var RButtons = [];

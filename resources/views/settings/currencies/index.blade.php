@@ -57,6 +57,11 @@
                                 <thead>
 
                                     <tr>
+                                        <th class="delete-all"><input type="checkbox" id="is_active">
+                                           <label class="col-3 control-label" for="is_active">
+                                           <a id="deleteAll" class="" href="javascript:void(0)"><i class="fa fa-trash"></i> {{trans('lang.all')}}</a>
+                                           </label>
+                                        </th>
 
                                         <th>{{trans('lang.currency_name')}}</th>
 
@@ -145,7 +150,6 @@
                 if(snapshots.docs.length < pagesize){
                     jQuery("#data-table_paginate").hide();
                 }
-                disableClick();
             }
         }); 
 
@@ -171,22 +175,26 @@
 
             var id = val.id;
             var route1 =  '{{route("currencies.edit",":id")}}';
-            route1 = route1.replace(':id', id); 
-
-            html=html+'<td>'+val.name+'</td>';
+            route1 = route1.replace(':id', id);
+ 
+            html = html + '<td class="delete-all" class="do_not_delete"><input type="checkbox" id="is_open_' + id + '" class="is_open" dataId="' + id + '"><label class="col-3 control-label"\n' +
+                'for="is_open_' + id + '" ></label></td>';
+            html=html+'<td><a href="'+route1+'">'+val.name+'</a></td>';
             html=html+'<td>'+val.symbol+'</td>';
             html=html+'<td>'+val.code+'</td>';
-            if(val.symbolAtRight){
-                html=html+'<td><span class="badge badge-success">Yes</span></td>';
-            }else{
-                html=html+'<td><span class="badge badge-danger">No</span></td>';
-            }
+            
 
-            if(val.isActive){
-              html=html+'<td><span class="badge badge-success">Yes</span></td>';
-          }else{
-              html=html+'<td><span class="badge badge-danger">No</span></td>';
-          }
+             if(val.symbolAtRight){
+                 html=html+'<td><span class="badge badge-success">Yes</span></td>';
+             }else{
+                 html=html+'<td><span class="badge badge-danger">No</span></td>';
+             }
+
+            if (val.isActive) {
+              html = html + '<td><label class="switch"><input type="checkbox" checked id="' + val.id + '" name="publish"><span class="slider round"></span></label></td>';
+            } else {
+              html = html + '<td><label class="switch"><input type="checkbox" id="' + val.id + '" name="publish"><span class="slider round"></span></label></td>';
+            }
 
           html=html+'<td class="action-btn"><a href="'+route1+'"><i class="fa fa-edit"></i></a><a id="'+val.id+'" name="category-delete" class="do_not_delete" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>';
 
@@ -194,6 +202,71 @@
       });
         return html;      
     }
+    
+    $("#is_active").click(function () {
+        $("#example24 .is_open").prop('checked', $(this).prop('checked'));
+
+    });
+
+    $("#deleteAll").click(function () {
+        if ($('#example24 .is_open:checked').length) {
+            if (confirm('Are You Sure want to Delete Selected Data ?')) {
+                jQuery("#data-table_processing").show();
+                $('#example24 .is_open:checked').each(function () {
+                    var dataId = $(this).attr('dataId');
+
+                    database.collection('currencies').doc(dataId).delete().then(function () {
+
+                        
+
+                        window.location.reload();
+                    });
+
+                });
+
+            }
+        } else {
+            alert('Please Select Any One Record .');
+        }
+    });
+
+    /* toggal publish action code start*/
+        $(document).on("click","input[name='publish']",function(e){
+            var ischeck=$(this).is(':checked');
+            var id=this.id;
+            if(ischeck){
+              database.collection('currencies').doc(id).update({'isActive': true}).then(function (result) {
+
+              });
+              //only 1 currency should active at a time
+              database.collection('currencies').where('isActive', "==", true).get().then(function (snapshots) {
+                    var activeCurrency = snapshots.docs[0].data();
+                    var activeCurrencyId = activeCurrency.id;
+                    database.collection('currencies').doc(activeCurrencyId).update({'isActive': false});
+
+                    $("#append_list1 tr").each(function(){
+                    	$(this).find(".switch #"+activeCurrencyId).prop('checked',false);
+                    });
+               });
+            }else{
+              database.collection('currencies').where('isActive', "==", true).get().then(function (snapshots) {
+	        	 	var activeCurrency = snapshots.docs[0].data();
+                    var activeCurrencyId = activeCurrency.id;
+                    if(snapshots.docs.length == 1 && activeCurrencyId == id){
+	        	 		alert('Can not disable all currency');
+	        	 		$("#"+id).prop('checked',true);
+	        	 		return false;
+	        	 	}else{
+	        	 		database.collection('currencies').doc(id).update({'isActive': false}).then(function (result) {});
+	        	 	}
+	        	 });
+            }
+
+        });
+
+        
+
+    /*toggal publish action code end*/
 
     function prev(){
       if(endarray.length==1){
@@ -301,25 +374,12 @@ wherequery.then((snapshots) => {
 }
 
 $(document).on("click","a[name='category-delete']", function (e) {
-    var id = this.id;
-    database.collection('vendor_categories').doc(id).delete();  
-
-
+	var id = this.id;
+    database.collection('currencies').doc(id).delete().then(function(result){
+		window.location.reload();
+	});
+      
 });
-
-function disableClick(){
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE'); ?>";
-    if(is_disable_delete == 1){
-        jQuery("a.do_not_delete").removeAttr("name");
-        jQuery("a.do_not_delete").attr("name","alert_demo");       
-    }
-}
-
-
-$(document).on("click","a[name='alert_demo']", function (e) {
-    alert(doNotDeleteAlert);
-});
-
 
 </script>
 

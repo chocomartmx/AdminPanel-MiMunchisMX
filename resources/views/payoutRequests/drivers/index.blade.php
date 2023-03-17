@@ -1,17 +1,6 @@
 @extends('layouts.app')
 
 
-
-<?php
-
-
-
-error_reporting(E_ALL ^ E_NOTICE);
-
-?>
-
-
-
 @section('content')
 
 <div class="page-wrapper">
@@ -385,6 +374,7 @@ aria-hidden="true">
     var currentCurrency = '';
 
     var currencyAtRight = false;
+    var decimal_degits = 0;
 
     var refCurrency = database.collection('currencies').where('isActive', '==', true);
 
@@ -395,6 +385,13 @@ aria-hidden="true">
         currentCurrency = currencyData.symbol;
 
         currencyAtRight = currencyData.symbolAtRight;
+
+        currencyAtRight = currencyData.symbolAtRight;
+
+        if (currencyData.decimal_degits) {
+            decimal_degits = currencyData.decimal_degits;
+        }
+
 
     });
 
@@ -504,13 +501,13 @@ aria-hidden="true">
 
             if (currencyAtRight) {
 
-                html = html + '<td>' + val.amount + '' + currentCurrency + '</td>';
+                html = html + '<td>' + parseFloat(val.amount).toFixed(decimal_degits) + '' + currentCurrency + '</td>';
 
-            } else {
+                } else {
 
-                html = html + '<td>' + currentCurrency + '' + val.amount + '</td>';
+                html = html + '<td>' + currentCurrency + '' + parseFloat(val.amount).toFixed(decimal_degits) + '</td>';
 
-            }
+                }
 
 
 

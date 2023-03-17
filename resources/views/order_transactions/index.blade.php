@@ -1,12 +1,6 @@
 @extends('layouts.app')
 
 
-
-<?php 
-
-error_reporting(E_ALL ^ E_NOTICE); 
-?>
-
 @section('content')
 <div class="page-wrapper">
 

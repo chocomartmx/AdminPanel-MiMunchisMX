@@ -205,12 +205,6 @@ $(document).ready(function(){
 
   $(".save_booking_btn").click(function(){
 
-          var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-                if(is_disable_delete == 1){
-                    alert("Do not alllow to change in demo content !");
-                    return false;
-                }
-
   var status = $("#booking_status").val();
       
          database.collection('booked_table').doc(id).update({'status':status}).then(function(result){

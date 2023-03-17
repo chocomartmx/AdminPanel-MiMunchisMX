@@ -233,11 +233,6 @@
 
             $(".save_cod_btn").click(function () {
 
-                var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-                if (is_disable_delete == 1) {
-                    alert("Do not alllow to change in demo content !");
-                    return false;
-                }
                 var isCODEnabled = $(".enable_cod").is(":checked");
                 database.collection('settings').doc("CODSettings").update({'isEnabled': isCODEnabled}).then(function (result) {
 

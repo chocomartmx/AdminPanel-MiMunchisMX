@@ -14,35 +14,16 @@
                 <li class="breadcrumb-item active">{{trans('lang.restaurant_details')}}</li>
             </ol>
         </div>
-    
+
   </div>
- 
+
    <div class="container-fluid">
    	<div class="row">
    		<div class="col-12">
 
     <div class="resttab-sec">
       	<div id="data-table_processing" class="dataTables_processing panel panel-default" style="display: none;">Processing...</div>
-      <div class="menu-tab">
-      	<?php /* ?>	<ul>
-      			<li class="active">
-      					<a href="#">Basic</a>
-      			</li>
-      			<li>
-      					<a href="{{route('restaurants.foods',$id)}}">Foods</a>
-      			</li>
-      			<li>
-      					<a href="{{route('restaurants.orders',$id)}}">Orders</a>
-      			</li>
-      			<li>
-      					<a href="{{route('restaurants.reviews',$id)}}">Reviews</a>
-      			</li>
-      			<li>
-      					<a href="{{route('restaurants.promos',$id)}}">Promos</a>
-      			<li>
-      					<a href="{{route('restaurants.payout',$id)}}">Payouts</a>
-      			</li>
-      		</ul> <?php */ ?>
+      	<div class="menu-tab">
           <ul>
             <li class="active">
                 <a href="{{route('restaurants.view',$id)}}">{{trans('lang.tab_basic')}}</a>
@@ -54,9 +35,6 @@
                 <a href="{{route('restaurants.orders',$id)}}">{{trans('lang.tab_orders')}}</a>
             </li>
             <li>
-                <a href="{{route('restaurants.reviews',$id)}}">{{trans('lang.tab_reviews')}}</a>
-            </li>
-            <li>
                 <a href="{{route('restaurants.coupons',$id)}}">{{trans('lang.tab_promos')}}</a>
             <li>
                 <a href="{{route('restaurants.payout',$id)}}">{{trans('lang.tab_payouts')}}</a>
@@ -64,14 +42,11 @@
               <li>
                 <a href="{{route('restaurants.booktable',$id)}}">{{trans('lang.dine_in_future')}}</a>
             </li>
-            <!-- <li>
-                <a href="{{route('restaurants.coupons',$id)}}">{{trans('lang.tab_coupons')}}</a>
-            </li> -->
         </ul>
 
       </div>
       <div class="row daes-top-sec mb-3">
-      			
+
             <div class="col-lg-3 col-md-6">
 
                   <div class="card">
@@ -170,7 +145,7 @@
 
       </div>
 
-     
+
       <div class="row restaurant_payout_create restaurant_details">
         <div class="restaurant_payout_create-inner">
           <fieldset>
@@ -219,13 +194,13 @@
                   <span class="restaurant_cuisines"></span>
                 </div>
               </div>
-              
+
 
             </fieldset>
           </div>
         </div>
 
-        
+
         <div class="row restaurant_payout_create restaurant_details">
         <div class="restaurant_payout_create-inner">
           <fieldset>
@@ -288,22 +263,167 @@
       <div class="row restaurant_payout_create restaurant_details">
         <div class="restaurant_payout_create-inner">
           <fieldset>
-             <legend>{{trans('lang.timing')}}</legend>
+             <legend>{{trans('lang.working_hours')}}</legend>
 
-              <div class="form-group row width-50">
-                <label class="col-3 control-label">{{trans('lang.Opening_Time')}}</label>
-                <div class="col-7">
-                  <span class="opentime"></span>
-                </div>
-              </div>
 
-              <div class="form-group row width-50">
-                <label class="col-3 control-label">{{trans('lang.Closing_Time')}}</label>
-                <div class="col-7">
-                  <span class="closetime"></span>
-                </div>
-              </div>
+                                            <div class="form-groupa row">
+                                                <label class="col-1 control-label">{{trans('lang.sunday')}}</label>
+                                                <div class="col-7 restaurant_workinghours_closed_Sunday" style="display:none">
+                                                    <span class="whclosetx">Closed</span><br>
+                                                </div>
+                                            </div>
 
+<div class="restaurant_workinghours_options_Sunday_div" style="display:none">
+
+                                            <div class="restaurant_discount_options_Sunday_div restaurant_discount">
+
+                                                <table class="booking-table" id="working_hour_table_Sunday" style="width: 95%;margin-left: 20px;">
+                                                    <tr>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.from')}}</label>
+                                                        </th>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.to')}}</label>
+                                                        </th>
+                                                    </tr>
+
+                                                </table>
+
+                                            </div><br>
+</div>
+
+                                            <div class="form-groupa row">
+                                                <label class="col-1 control-label">{{trans('lang.monday')}}</label>
+                                                <div class="col-7 restaurant_workinghours_closed_Monday" style="display:none">
+                                                    <span class="whclosetx">Closed</span><br>
+                                                </div>
+                                            </div>
+<div class="restaurant_workinghours_options_Monday_div" style="display:none">
+
+                                            <div class="restaurant_discount_options_Monday_div restaurant_discount">
+                                                <table class="booking-table" id="working_hour_table_Monday" style="width: 95%;margin-left: 20px;">
+                                                    <tr>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.from')}}</label>
+                                                        </th>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.to')}}</label>
+                                                        </th>
+                                                    </tr>
+                                                </table>
+                                            </div><br>
+</div>
+
+                                            <div class="form-groupa row">
+                                                <label class="col-1 control-label">{{trans('lang.tuesday')}}</label>
+                                                <div class="col-7 restaurant_workinghours_closed_Tuesday" style="display:none">
+                                                    <span class="whclosetx">Closed</span><br>
+                                                </div>
+                                            </div>
+<div class="restaurant_workinghours_options_Tuesday_div" style="display:none">
+                                            <div class="restaurant_discount_options_Tuesday_div restaurant_discount">
+
+                                                <table class="booking-table" id="working_hour_table_Tuesday" style="width: 95%;margin-left: 20px;">
+                                                    <tr>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.from')}}</label>
+                                                        </th>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.to')}}</label>
+                                                        </th>
+                                                    </tr>
+
+                                                </table>
+                                            </div><br>
+</div>
+
+                                            <div class="form-groupa row">
+                                                <label class="col-1 control-label">{{trans('lang.wednesday')}}</label>
+                                                <div class="col-7 restaurant_workinghours_closed_Wednesday" style="display:none">
+                                                    <span class="whclosetx">Closed</span><br>
+                                                </div>
+                                            </div>
+
+<div class="restaurant_workinghours_options_Wednesday_div" style="display:none">
+                                            <div class="restaurant_discount_options_Wednesday_div restaurant_discount">
+                                                <table class="booking-table" id="working_hour_table_Wednesday" style="width: 95%;margin-left: 20px;">
+                                                    <tr>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.from')}}</label>
+                                                        </th>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.to')}}</label>
+                                                        </th>
+                                                    </tr>
+
+                                                </table>
+                                            </div><br>
+</div>
+
+                                            <div class="form-groupa row">
+                                                <label class="col-1 control-label">{{trans('lang.thursday')}}</label>
+                                                <div class="col-7 restaurant_workinghours_closed_Thursday" style="display:none">
+                                                    <span class="whclosetx">Closed</span><br>
+                                                </div>
+                                            </div>
+<div class="restaurant_workinghours_options_Thursday_div" style="display:none">
+                                            <div class="restaurant_discount_options_Thursday_div restaurant_discount">
+                                                <table class="booking-table" id="working_hour_table_Thursday" style="width: 95%;margin-left: 20px;">
+                                                    <tr>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.from')}}</label>
+                                                        </th>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.to')}}</label>
+                                                        </th>
+                                                    </tr>
+
+                                                </table>
+                                            </div><br>
+</div>
+
+                                            <div class="form-groupa row">
+                                                <label class="col-1 control-label">{{trans('lang.friday')}}</label>
+                                                <div class="col-7 restaurant_workinghours_closed_Friday" style="display:none">
+                                                    <span class="whclosetx">Closed</span><br>
+                                                </div>
+                                            </div>
+<div class="restaurant_workinghours_options_Friday_div" style="display:none">
+                                            <div class="restaurant_discount_options_Friday_div restaurant_discount">
+                                                <table class="booking-table" id="working_hour_table_Friday" style="width: 95%;margin-left: 20px;">
+                                                    <tr>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.from')}}</label>
+                                                        </th>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.to')}}</label>
+                                                        </th>
+                                                    </tr>
+
+                                                </table>
+                                            </div><br>
+</div>
+
+                                            <div class="form-groupa row">
+                                                <label class="col-1 control-label">{{trans('lang.satuarday')}}</label>
+                                                <div class="col-7 restaurant_workinghours_closed_Satuarday" style="display:none">
+                                                    <span class="whclosetx">Closed</span><br>
+                                                </div>
+                                            </div>
+<div class="restaurant_workinghours_options_Satuarday_div" style="display:none">
+                                            <div class="restaurant_discount_options_Satuarday_div restaurant_discount">
+                                                <table class="booking-table" id="working_hour_table_Satuarday" style="width: 95%;margin-left: 20px;">
+                                                    <tr>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.from')}}</label>
+                                                        </th>
+                                                        <th>
+                                                            <label class="col-3 control-label whvptitle">{{trans('lang.to')}}</label>
+                                                        </th>
+                                                    </tr>
+                                                </table>
+                                            </div>              
+</div>
             </fieldset>
           </div>
       </div>
@@ -315,14 +435,14 @@
 
               <div class="form-group row width-100">
                 <div class="col-7" id="filtershtml">
-                    
+
                 </div>
               </div>
             </fieldset>
           </div>
       </div>
 
-      
+
    </div>
 
 
@@ -348,20 +468,50 @@
 	var restaurantOwnerId = "";
 	var restaurantOwnerOnline = false;
 
+        var workingHours = [];
+        var timeslotworkSunday = [];
+        var timeslotworkMonday = [];
+        var timeslotworkTuesday = [];
+        var timeslotworkWednesday = [];
+        var timeslotworkFriday = [];
+        var timeslotworkSatuarday = [];
+        var timeslotworkThursday = [];
+
   var placeholderImage = '';
   var placeholder = database.collection('settings').doc('placeHolderImage');
- 
+
   placeholder.get().then( async function(snapshotsimage){
     var placeholderImageData = snapshotsimage.data();
     placeholderImage = placeholderImageData.image;
   })
 
+var currentCurrency = '';
+    var currencyAtRight = false;
+    var decimal_degits = 0;
+    var refCurrency = database.collection('currencies').where('isActive', '==', true);
+    refCurrency.get().then(async function (snapshots) {
+        var currencyData = snapshots.docs[0].data();
+        currentCurrency = currencyData.symbol;
+        currencyAtRight = currencyData.symbolAtRight;
+        if(currencyData.decimal_degits){
+            decimal_degits = currencyData.decimal_degits;
+        }
+    });
+
 	$(document).ready(async function(){
-		  var orders= await getTotalOrders();
-      var earnings= await getTotalEarnings();
-		  var payment=await getTotalpayment();
-		  var remaining=earnings-payment;
-		  $("#remaining_amount").text(remaining);
+		var orders = await getTotalOrders();
+      	var earnings = await getTotalEarnings();
+		var payment = await getTotalpayment();
+		var remaining = earnings-payment;
+
+		if (currencyAtRight) {
+			remaining_with_currency = parseFloat(remaining).toFixed(decimal_degits) + "" + currentCurrency;
+		 } else {
+		    remaining_with_currency = currentCurrency + "" + parseFloat(remaining).toFixed(decimal_degits);
+		 }
+		
+		$("#remaining_amount").text(remaining_with_currency);
+
   		jQuery("#data-table_processing").show();
   		ref.get().then( async function(snapshots){
 			var restaurant = snapshots.docs[0].data();
@@ -369,7 +519,7 @@
       var rating=0;
       if( restaurant.hasOwnProperty('reviewsCount') && restaurant.reviewsCount!=0 ){
         //console.log(parseFloat(restaurant.reviewsSum) +''+ parseInt(restaurant.reviewsCount) )
-          rating = Math.round(parseFloat(restaurant.reviewsSum)/parseInt(restaurant.reviewsCount)); 
+          rating = Math.round(parseFloat(restaurant.reviewsSum)/parseInt(restaurant.reviewsCount));
       }else{
         rating =0;
       }
@@ -385,14 +535,79 @@
         review=review+'<li class="rating__item"></li>';
       review=review+'</ul>';
       $("#restaurant_reviewcount").text(restaurant.reviewsCount);
-      
-      if(restaurant.reststatus==true){
-          $(".vendor_avtive").text("Open");
-          $(".vendor_avtive").addClass("open");
-        }else{
-          $(".vendor_avtive").text("Closed");
-          $(".vendor_avtive").addClass("closed");
-      }
+
+			    var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+					var currentdate = new Date();
+					var currentDay = days[currentdate.getDay()];
+					hour = currentdate.getHours();
+					minute = currentdate.getMinutes();
+					if(hour<10){hour='0'+hour} if(minute<10){minute='0'+minute}
+					 var currentHours = hour+':'+minute;
+					 $(".vendor_avtive").text("Closed");
+					 $(".vendor_avtive").addClass("closed");
+					 if (restaurant.hasOwnProperty('workingHours')) {
+						  for (i = 0; i < restaurant.workingHours.length; i++) {
+								 var day = restaurant.workingHours[i]['day'];
+								 if (restaurant.workingHours[i]['day'] == currentDay) {
+											 if (restaurant.workingHours[i]['timeslot'].length != 0) {
+													 for (j = 0; j < restaurant.workingHours[i]['timeslot'].length; j++) {
+														  var timeslot = restaurant.workingHours[i]['timeslot'][j];
+															var from=timeslot[`from`];
+															var to=timeslot[`to`];
+															if(currentHours>=from && currentHours<=to){
+																$(".vendor_avtive").text("Open");
+											          $(".vendor_avtive").addClass("open");
+															}
+													 }
+												 }
+
+
+											 }
+							}
+					 }
+if (restaurant.hasOwnProperty('workingHours')) {
+                        for (i = 0; i < restaurant.workingHours.length; i++) {
+                            
+                            var day = restaurant.workingHours[i]['day'];
+                            if (restaurant.workingHours[i]['timeslot'].length != 0 ) {
+                                for (j = 0; j < restaurant.workingHours[i]['timeslot'].length; j++) {
+                                    $(".restaurant_workinghours_options_" + day + "_div").show();
+                                    $(".restaurant_workinghours_closed").hide();
+                                    var timeslot = restaurant.workingHours[i]['timeslot'][j];
+
+                                    var discount = restaurant.workingHours[i]['timeslot'][j]['discount'];
+                                    var TimeslotHourVar = {'from': timeslot[`from`], 'to': timeslot[`to`]};
+                                    // if (day == 'Sunday') {
+                                    //     timeslotworkSunday.push(TimeslotHourVar);
+                                    // } else if (day == 'Monday') {
+                                    //     timeslotworkMonday.push(TimeslotHourVar);
+                                    // } else if (day == 'Tuesday') {
+                                    //     timeslotworkTuesday.push(TimeslotHourVar);
+                                    // } else if (day == 'Wednesday') {
+                                    //     timeslotworkWednesday.push(TimeslotHourVar);
+                                    // } else if (day == 'Thursday') {
+                                    //     timeslotworkThursday.push(TimeslotHourVar);
+                                    // } else if (day == 'Friday') {
+                                    //     timeslotworkFriday.push(TimeslotHourVar);
+                                    // } else if (day == 'Satuarday') {
+                                    //     timeslotworkSatuarday.push(TimeslotHourVar);
+                                    // }
+
+                                    $('#working_hour_table_' + day + ' tr:last').after('<tr>' +
+                                        '<td class="" style="width:50%;"><input type="text" class="form-control ' + i + '_' + j + '_row" value="' + timeslot[`from`] + '" id="from' + day + j + i + '" disabled></td>' +
+                                        '<td class="" style="width:50%;"><input type="text" class="form-control ' + i + '_' + j + '_row" value="' + timeslot[`to`] + '" id="to' + day + j + i + '" disabled></td></tr>');
+
+
+                                }
+                                
+                            }
+                             else{
+                                $('.restaurant_workinghours_closed_'+day+'').show();
+                                
+                            }
+                            
+                        }
+                    }
 
       var photos='';
       restaurant.photos.forEach((photo) => {
@@ -419,7 +634,7 @@
       }
 
       $("#filtershtml").html(filtershtml);
-      
+
 
       await database.collection('vendor_categories').get().then( async function(snapshots){
           snapshots.docs.forEach((listval) => {
@@ -428,23 +643,22 @@
                   $(".restaurant_cuisines").text(data.title);
                 }
             })
-      }); 
-
+      });
 
       $(".opentime").text(restaurant.opentime);
       $(".closetime").text(restaurant.closetime);
-      
+
 
 			$(".restaurant_address").text(restaurant.location);
 			$(".restaurant_latitude").text(restaurant.latitude);
 			$(".restaurant_longitude").text(restaurant.longitude);
 			$(".restaurant_description").text(restaurant.description);
       if(restaurant.hasOwnProperty('enabledDiveInFuture') &&  restaurant.enabledDiveInFuture == true){
-        $(".dine_in_future").html("ON");  
+        $(".dine_in_future").html("ON");
       }else{
         $(".dine_in_future").html("OFF");
       }
-      
+
       restaurantOwnerOnline = restaurant.isActive;
 	   		photo = restaurant.photo;
 	    	restaurantOwnerId = restaurant.author;
@@ -453,7 +667,7 @@
 	            var user = listval.data();
 				        $(".vendor_name").html(user.firstName+" "+user.lastName);
                 $(".vendor_email").html(user.email);
-                
+
 
                 $(".vendor_phoneNumber").html(user.phoneNumber);
 
@@ -475,8 +689,8 @@
 			    	}
 	          	})
 
-			});  
-	    
+			});
+
 	    	if(restaurant.hasOwnProperty('phonenumber')){
 	     		$(".restaurant_phone").text(restaurant.phonenumber);
 	    	}
@@ -484,11 +698,11 @@
   		})
 
 
-  
+
 		$(".save_restaurant_btn").click(function(){
 		  	var restaurantname = $(".restaurant_name").val();
 			var cuisines = $("#restaurant_cuisines option:selected").val();
-			var address = $(".restaurant_address").val();	
+			var address = $(".restaurant_address").val();
 			var latitude = parseFloat($(".restaurant_latitude").val());
 			var longitude = parseFloat($(".restaurant_longitude").val());
 			var description = $(".restaurant_description").val();
@@ -498,7 +712,7 @@
 		    database.collection('vendors').doc(id).update({'title':restaurantname,'description':description,'latitude':latitude,
 		      'longitude':longitude,'location':address,'photo':photo,'categoryID':cuisines,'phonenumber':phonenumber,'categoryTitle':categoryTitle}).then(function(result) {
 		                window.location.href = '{{ route("restaurants")}}';
-		             }); 
+		             });
 		})
 
 	})
@@ -509,15 +723,15 @@
   		var reader = new FileReader();
 	  	reader.onload = (function(theFile) {
 		    return function(e) {
-		        
+
 		      var filePayload = e.target.result;
 		      var hash = CryptoJS.SHA256(Math.random() + CryptoJS.SHA256(filePayload));
-		        var val =f.name;       
+		        var val =f.name;
 		      var ext=val.split('.')[1];
 		      var docName=val.split('fakepath')[1];
 		      var filename = (f.name).replace(/C:\\fakepath\\/i, '')
 
-		      var timestamp = Number(new Date());      
+		      var timestamp = Number(new Date());
 		      var uploadTask = storageRef.child(filename).put(theFile);
 		      console.log(uploadTask);
 		      uploadTask.on('state_changed', function(snapshot){
@@ -531,13 +745,13 @@
 		            jQuery("#uploding_image").text("Upload is completed");
 		            photo = downloadURL;
 
-		      });   
+		      });
 		    });
-	    
+
 	    };
 	  })(f);
   reader.readAsDataURL(f);
-}   
+}
 
   async function getStoreNameFunction(vendorId){
      var vendorName = '';
@@ -546,11 +760,11 @@
 
         vendorName = vendorData.title;
         $('.restaurantTitle').html('{{trans('lang.restaurant_plural')}} - ' + vendorName);
-        
+
         if(vendorData.dine_in_active==true){
             $(".dine_in_future").show();
         }
-        
+
     });
 
     return vendorName;
@@ -558,19 +772,22 @@
 }
 
 async function getTotalOrders(){
-       
+
         await database.collection('restaurant_orders').where('vendorID','==','<?php echo $id; ?>').where('status','in',["Order Completed"]).get().then(async function(orderSnapshots){
             var paymentData = orderSnapshots.docs;
-            //console.log(paymentData.length);                      
-            $("#total_orders").text(paymentData.length);        		
+            //console.log(paymentData.length);
+            $("#total_orders").text(paymentData.length);
         })
 }
 
 async function getTotalEarnings(){
+        
         var totalEarning = 0;
-        var adminCommission=0;
+        var adminCommission = 0;
+        
         await database.collection('restaurant_orders').where('vendorID','==','<?php echo $id; ?>').where('status','in',["Order Completed"]).get().then(async function(orderSnapshots){
             var paymentData = orderSnapshots.docs;
+            
             paymentData.forEach((order)=>{
                 var orderData = order.data();
                 var price = 0;
@@ -579,17 +796,22 @@ async function getTotalEarnings(){
                     adminCommission = commission + adminCommission;
                 }
                 orderData.products.forEach((product)=> {
-
-                    if(product.price && product.quantity != 0){
+                    if(product.price > 0 && product.quantity != 0){
                         var productTotal = parseInt(product.price)*parseInt(product.quantity);
                         price = price + productTotal;
                     }
                 })
                 totalEarning = totalEarning + price;
             })
-            
-            $("#total_earnings").text(totalEarning);
-            
+			
+            if (currencyAtRight) {
+            	totalEarningwithCurrency = parseFloat(totalEarning).toFixed(decimal_degits) + "" + currentCurrency;
+            } else {
+                totalEarningwithCurrency = currentCurrency + "" + parseFloat(totalEarning).toFixed(decimal_degits);
+            }
+
+            $("#total_earnings").text(totalEarningwithCurrency);
+
         })
      return totalEarning;
 }
@@ -599,17 +821,17 @@ async function getTotalpayment(driverID){
   var paid_price = 0;
   var total_price = 0;
   var remaining = 0;
-  await database.collection('payouts').where('vendorID','==','<?php echo $id; ?>').get().then( async function(payoutSnapshots){   
+  await database.collection('payouts').where('vendorID','==','<?php echo $id; ?>').get().then( async function(payoutSnapshots){
        payoutSnapshots.docs.forEach((payout)=>{
           var payoutData = payout.data();
           if(payoutData.amount && parseFloat(payoutData.amount)!=undefined && parseFloat(payoutData.amount)!='' && parseFloat(payoutData.amount)!=NaN){
           		paid_price = parseFloat(paid_price) + parseFloat(payoutData.amount);
           }
-          
+
         })
 });
 $("#total_payment").text(paid_price);
-return paid_price; 
+return paid_price;
 }
 
 </script>

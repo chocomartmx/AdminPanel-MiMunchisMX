@@ -1,12 +1,5 @@
 @extends('layouts.app')
 
-
-
-<?php 
-
-error_reporting(E_ALL ^ E_NOTICE); 
- ?>
-
 @section('content')
         <div class="page-wrapper">
 
@@ -44,7 +37,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 
             </div>
 
-      
+
 
             <div class="container-fluid">
 
@@ -74,17 +67,21 @@ error_reporting(E_ALL ^ E_NOTICE);
                                 <input type="search" id="search" class="search form-control" placeholder="Search" ></label>&nbsp;<button onclick="searchtext();" class="btn btn-warning btn-flat">{{trans('lang.search')}}</button>&nbsp;<button onclick="searchclear();" class="btn btn-warning btn-flat">{{trans('lang.clear')}}</button>
                             </div>
                             </div>
- 
+
 
 
                                 <div class="table-responsive m-t-10">
 
 
-                                    <table id="example24" class="display nowrap table table-hover table-striped table-bordered table table-striped" cellspacing="0" width="100%">
+                                    <table id="notificationTable" class="display nowrap table table-hover table-striped table-bordered table table-striped" cellspacing="0" width="100%">
 
                                         <thead>
 
                                             <tr>
+                                              <th class="delete-all"><input type="checkbox" id="is_active"><label
+                                            class="col-3 control-label" for="is_active">
+                                    <a id="deleteAll" class="do_not_delete" href="javascript:void(0)">
+                                        <i class="fa fa-trash"></i> {{trans('lang.all')}}</a></label></th>
 
                                                 <th>{{trans('lang.subject')}}</th>
 
@@ -141,10 +138,10 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 @section('scripts')
    <script type="text/javascript">
-  
+
     var database = firebase.firestore();
     var offest=1;
-    var pagesize=10; 
+    var pagesize=10;
     var end = null;
     var endarray=[];
     var start = null;
@@ -152,16 +149,17 @@ error_reporting(E_ALL ^ E_NOTICE);
     var refData = database.collection('notifications');
     var ref = refData.orderBy('createdAt','desc');
     var append_list = '';
-    
+
+
 
 $(document).ready(function() {
-	
+
     var inx= parseInt(offest) * parseInt(pagesize);
     jQuery("#data-table_processing").show();
-  
+
     append_list = document.getElementById('append_restaurants');
     append_list.innerHTML='';
-    ref.limit(pagesize).get().then( async function(snapshots){  
+    ref.limit(pagesize).get().then( async function(snapshots){
     html='';
     html=await buildHTML(snapshots);
     jQuery("#data-table_processing").hide();
@@ -172,11 +170,35 @@ $(document).ready(function() {
         if(snapshots.docs.length<pagesize){
             jQuery("#data-table_paginate").hide();
         }
-        
+
     }
 });
 
 })
+$("#is_active").click(function () {
+       $("#notificationTable .is_open").prop('checked', $(this).prop('checked'));
+
+   });
+
+   $("#deleteAll").click(function () {
+       if ($('#notificationTable .is_open:checked').length) {
+           if (confirm('Are You Sure want to Delete Selected Data ?')) {
+               jQuery("#data-table_processing").show();
+               $('#notificationTable .is_open:checked').each(function () {
+                   var dataId = $(this).attr('dataId');
+
+                   database.collection('notifications').doc(dataId).delete().then(function () {
+
+                       window.location.reload();
+                   });
+
+               });
+
+           }
+       } else {
+           alert('Please Select Any One Record .');
+       }
+   });
 
  function buildHTML(snapshots){
 
@@ -188,17 +210,18 @@ $(document).ready(function() {
         var count = 0;
          snapshots.docs.forEach( async(listval) => {
             var listval=listval.data();
-          
+
             var val=listval;
             val.id=listval.id;
                 html=html+'<tr>';
                 newdate='';
                 var id = val.id;
-                
+                html = html + '<td class="delete-all"><input type="checkbox" id="is_open_' + id + '" class="is_open" dataId="' + id + '"><label class="col-3 control-label"\n' +
+                'for="is_open_' + id + '" ></label></td>';
                 html=html+'<td>'+val.subject+'</td>';
 
                 html=html+'<td>'+val.message+'</td>';
-                
+
                 var datatime='';
                 try{
 
@@ -214,11 +237,11 @@ $(document).ready(function() {
                 html=html+'<td>'+datatime+'</td>';
 
                 html=html+'<td class="vendors-action-btn"><a id="'+val.id+'" name="notifications-delete" class="do_not_delete" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>';
-                
+
                 html=html+'</tr>';
                 count =count +1;
           });
-          return html;      
+          return html;
 }
 
 
@@ -236,7 +259,7 @@ async function next(){
                 listener = ref.startAfter(start).limit(pagesize).get();
             }
           listener.then( async(snapshots) => {
-            
+
                 html='';
                 html=await buildHTML(snapshots);
                 console.log(snapshots);
@@ -259,7 +282,7 @@ async function prev(){
         return false;
     }
     end=endarray[endarray.length-2];
-  
+
   if(end!=undefined || end!=null){
             jQuery("#data-table_processing").show();
                  if(jQuery("#selected_search").val()=='subject' && jQuery("#search").val().trim()!=''){
@@ -268,7 +291,7 @@ async function prev(){
                 }else{
                     listener = ref.startAt(end).limit(pagesize).get();
                 }
-                
+
                 listener.then(async(snapshots) => {
                 html='';
                 html=await buildHTML(snapshots);
@@ -278,15 +301,15 @@ async function prev(){
                     start = snapshots.docs[snapshots.docs.length - 1];
                     endarray.splice(endarray.indexOf(endarray[endarray.length-1]),1);
 
-                    if(snapshots.docs.length < pagesize){ 
-   
+                    if(snapshots.docs.length < pagesize){
+
                         jQuery("#users_table_previous_btn").hide();
                     }
-                    
+
                 }
             });
   }
-} 
+}
 
 
 function searchtext(){
@@ -296,14 +319,14 @@ function searchtext(){
   append_list.innerHTML='';
 
    if(jQuery("#selected_search").val()=='subject' && jQuery("#search").val().trim()!=''){
-            console.log(jQuery("#search").val());     
+            console.log(jQuery("#search").val());
      wherequery=refData.orderBy('subject').limit(pagesize).startAt(jQuery("#search").val()).endAt(jQuery("#search").val()+'\uf8ff').get();
    }
-  
+
   else{
     wherequery=ref.limit(pagesize).get();
   }
-  
+
   wherequery.then((snapshots) => {
     html='';
     html=buildHTML(snapshots);
@@ -312,15 +335,15 @@ function searchtext(){
         append_list.innerHTML=html;
         start = snapshots.docs[snapshots.docs.length - 1];
         endarray.push(snapshots.docs[0]);
-        if(snapshots.docs.length < pagesize){ 
-   
+        if(snapshots.docs.length < pagesize){
+
             jQuery("#data-table_paginate").hide();
         }else{
 
             jQuery("#data-table_paginate").show();
         }
     }
-}); 
+});
 
 }
 
@@ -333,15 +356,10 @@ function searchclear(){
 
 $(document).on("click","a[name='notifications-delete']", function (e) {
     var id = this.id;
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE'); ?>";
-    if(is_disable_delete == 1){
-        alert(doNotDeleteAlert);
-        return false;
-    }
     database.collection('notifications').doc(id).delete().then(function(){
         window.location.reload();
-    }); 
-}); 
+    });
+});
 </script>
 
 

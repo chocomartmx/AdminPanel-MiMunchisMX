@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-<?php
-
-error_reporting(E_ALL ^ E_NOTICE);
-?>
 
 @section('content')
 <div class="page-wrapper">
@@ -241,11 +237,16 @@ aria-hidden="true">
 
     var currentCurrency = '';
     var currencyAtRight = false;
+    var decimal_degits = 0;
+
     var refCurrency = database.collection('currencies').where('isActive', '==', true);
     refCurrency.get().then(async function (snapshots) {
         var currencyData = snapshots.docs[0].data();
         currentCurrency = currencyData.symbol;
         currencyAtRight = currencyData.symbolAtRight;
+        if (currencyData.decimal_degits) {
+            decimal_degits = currencyData.decimal_degits;
+        }
     });
 
     var append_list = '';
@@ -311,9 +312,9 @@ aria-hidden="true">
             }
 
             if (currencyAtRight) {
-                price_val = price + "" + currentCurrency;
+                price_val = parseFloat(price).toFixed(decimal_degits) + "" + currentCurrency;
             } else {
-                price_val = currentCurrency + "" + price;
+                price_val = currentCurrency + "" + parseFloat(price).toFixed(decimal_degits);
             }
             html = html + '<tr>';
             <?php if($id == ''){ ?>

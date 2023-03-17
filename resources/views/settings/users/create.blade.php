@@ -240,14 +240,6 @@
 var database = firebase.firestore();
 var photo ="";
 
-/*firebase.auth().signInWithEmailAndPassword('restaurant02@foodie.com','123456').then(function(result) {
-	console.log(result);
-})
-
-$(document).ready(function(){
-  })*/
-
-
   
 $(".create_user_btn").click(function(){
  
@@ -368,7 +360,8 @@ function handleFileSelect(evt) {
       var docName=val.split('fakepath')[1];
       var filename = (f.name).replace(/C:\\fakepath\\/i, '')
 
-      var timestamp = Number(new Date());      
+      var timestamp = Number(new Date());    
+	  var filename = filename.split('.')[0]+"_"+timestamp+'.'+ext;  
       var uploadTask = storageRef.child(filename).put(theFile);
       console.log(uploadTask);
       uploadTask.on('state_changed', function(snapshot){

@@ -281,14 +281,7 @@
 
 
             $(".save_flutterWave_btn").click(function () {
-
-                var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-                if(is_disable_delete == 1){
-                    alert("Do not alllow to change in demo content !");
-                    return false;    
-                }
-            
-
+                
                 var secretKey = $(".secretKey").val();
                 var publicKey = $(".publicKey").val();
                 var isEnable = $(".enable_payment_method").is(":checked");

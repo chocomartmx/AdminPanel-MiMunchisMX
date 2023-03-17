@@ -106,12 +106,6 @@
 
             $(".send_message").click(async function () {
 
-                var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE'); ?>";
-                // if (is_disable_delete == 1) {
-                //     alert("Not allow to send notification to all users in demo.");
-                //     return false;
-                // }
-
                 $(".success_top").hide();
                 $(".error_top").hide();
                 var message = $("#message").val();

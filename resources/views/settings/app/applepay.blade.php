@@ -228,11 +228,6 @@
 
   $(".save_apple_pay_btn").click(function(){
         
-         var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE',0); ?>";
-          if(is_disable_delete == 1){
-            alert("Do not alllow to change in demo content !");
-            return false;    
-          }
         var isApplePayEnabled = $(".enable_apple_pay").is(":checked");
         var merchantId = $(".apple_pay_merchant_id").val();
         var stripeSecret = $(".stripe_secret").val();

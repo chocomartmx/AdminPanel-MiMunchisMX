@@ -292,12 +292,6 @@
 
             $(".save_payfast_btn").click(function () {
 
-                var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-                if (is_disable_delete == 1) {
-                    alert("Do not alllow to change in demo content !");
-                    return false;
-                }
-
                 var merchant_key = $(".merchant_key").val();
                 var merchant_id = $(".merchant_id").val();
                 var ispayfastenabled = $(".enable_payfast").is(":checked");

@@ -8182,3 +8182,16 @@ input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::after {
 
 
 }
+
+@media screen and ( max-width: 991px ) {
+
+.row.vendor_payout_create{max-width: 100%;}
+.row.vendor_payout_create label.control-label{-webkit-box-flex: 0;-ms-flex: 0 0 100%;flex: 0 0 100%;max-width: 100%;}
+
+}
+@media screen and ( max-width: 767px ) {
+
+#users-table_filter #selected_search.form-control, #users-table_filter .form-group, #users-table_filter .form-group .form-control, #users-table_filter .form-group button.btn{width: 100%;} 
+header.topbar{bottom: auto !important; top: 0 !important;}
+.form-group.row.width-50{width: 100%;}
+}

@@ -1,12 +1,5 @@
 @extends('layouts.app')
 
-
-
-<?php 
-
-error_reporting(E_ALL ^ E_NOTICE); 
- ?>
-
 @section('content')
 <div class="page-wrapper">
     <!-- ============================================================== -->
@@ -76,125 +69,146 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 <script type="text/javascript">
  
-    var database = firebase.firestore();
+var database = firebase.firestore();
 
-    var offest=1;
-    var pagesize=10; 
-    var end = null;
-    var endarray=[];
-    var start = null;
-    var user_number = [];
-    var languages=[];
-// var ref=[];
-    //var refData = database.collection('users').where("role","in",["customer"]);
-    var ref = database.collection('settings').doc('languages');
-    var placeholderImage = '';
-    var append_list = '';
-    
-    $(document).ready(function() {
+var offest=1;
+var pagesize=10; 
+var end = null;
+var endarray=[];
+var start = null;
+var user_number = [];
+var languages=[];
+var ref = database.collection('settings').doc('languages');
+var placeholderImage = '';
+var append_list = '';
 
-        $(document.body).on('click', '.redirecttopage' ,function(){    
-            var url=$(this).attr('data-url');
-            window.location.href = url;
-        });
+$(document).ready(function() {
 
-        var inx= parseInt(offest) * parseInt(pagesize);
-        jQuery("#data-table_processing").show();
-        
-        
-        append_list = document.getElementById('append_list1');
-        append_list.innerHTML='';
-        ref.get().then( async function(snapshots){  
-        html='';
-        snapshots=snapshots.data();
-        if(snapshots){
-        snapshots=snapshots.list;
-        languages=snapshots;
-        html=buildHTML(snapshots);
-        if(html!=''){
-            append_list.innerHTML=html;
-         }
-        }
-        jQuery("#data-table_processing").hide();
-      }); 
-     
+    $(document.body).on('click', '.redirecttopage' ,function(){    
+        var url=$(this).attr('data-url');
+        window.location.href = url;
     });
 
+    var inx= parseInt(offest) * parseInt(pagesize);
+    jQuery("#data-table_processing").show();
+    
+    append_list = document.getElementById('append_list1');
+    append_list.innerHTML='';
+  
+    ref.get().then( async function(snapshots){  
+      html='';
+	    snapshots=snapshots.data();
+	    if(snapshots){
+	    	snapshots=snapshots.list;
+	    	languages=snapshots;
+	    	html=buildHTML(snapshots);
+	    	if(html!=''){
+	        	append_list.innerHTML=html;
+	     	}
+	    }
+	    
+	    jQuery("#data-table_processing").hide();
+  }); 
+ 
+});
 
-    function buildHTML(snapshots){
-        var html='';
-        var alldata=[];
-        var number= [];
-        if(snapshots.length){
-        snapshots.forEach((listval) => {
-            var datas=listval;
-            datas.id=listval.id;
-            alldata.push(datas);
-        });
-        var count = 0;
-        alldata.forEach((listval) => {    
-            var val=listval;
-                html=html+'<tr>';
-                newdate='';
-                var id = val.slug;
-                var route1 =  '{{route("settings.app.languages.edit",":id")}}';
-                route1 = route1.replace(':id', id);
 
-                html = html + '<td data-url="' + route1 + '" class="redirecttopage">'+val.title+'</td>';
+function buildHTML(snapshots){
+    var html='';
+    var alldata=[];
+    var number= [];
+    if(snapshots.length){
+    snapshots.forEach((listval) => {
+        var datas=listval;
+        datas.id=listval.id;
+        alldata.push(datas);
+    });
+    var count = 0;
+    alldata.forEach((listval) => {    
+        var val=listval;
+            html=html+'<tr>';
+            newdate='';
+            var id = val.slug;
+            var route1 =  '{{route("settings.app.languages.edit",":id")}}';
+            route1 = route1.replace(':id', id);
 
-                html=html+'<td>'+val.slug+'</td>';
-        
-                if(val.isActive){
-                  html=html+'<td><span class="badge badge-success">Yes</span></td>';
-                }else{
-                  html=html+'<td><span class="badge badge-danger">No</span></td>';
+            html = html + '<td data-url="' + route1 + '" class="redirecttopage">'+val.title+'</td>';
+
+            html=html+'<td>'+val.slug+'</td>';
+    
+            if (val.isActive) {
+                  html = html + '<td><label class="switch"><input type="checkbox" checked id="' + val.slug + '" name="isActive"><span class="slider round"></span></label></td>';
+                } else {
+                  html = html + '<td><label class="switch"><input type="checkbox" id="' + val.slug + '" name="isActive"><span class="slider round"></span></label></td>';
                 }
 
-                html=html+'<td class="action-btn"><a href="'+route1+'"><i class="fa fa-edit"></i></a><a id="'+val.slug+'" class="do_not_delete" name="lang-delete" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>';
-                
-                html=html+'</tr>';
-                count =count +1;
-          });
-        }
-          return html;      
+            html=html+'<td class="action-btn"><a href="'+route1+'"><i class="fa fa-edit"></i></a><a id="'+val.slug+'" class="do_not_delete" name="lang-delete" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>';
+            
+            html=html+'</tr>';
+            count =count +1;
+      });
     }
+    return html;      
+}
+    
+/* toggal publish action code start*/
+$(document).on("click","input[name='isActive']",function(e){
+        var ischeck=$(this).is(':checked');
+        var id=this.id;
+        var language_key='';
+        var error = 0;
+        ref.get().then(async function (snapshots) {
+
+            snapshots = snapshots.data();
+            snapshots = snapshots.list;
+            if (snapshots.length) {
+                languages = snapshots;
+            }
+            for (var key in snapshots) {
+                if (snapshots[key]['slug'] == id) {
+                    language_key = key;
+                }
+                if(snapshots[key]['isActive'] != true){
+                	error++;
+                }
+            }
+            
+	        if(ischeck){
+	        	languages[language_key]['isActive'] = true;
+	        	database.collection('settings').doc('languages').update({'list': languages}).then(function (result) {
+	        	});
+	        }else{
+	        	if(error > 0){
+            		alert("{{trans('lang.lang_error')}}");
+    	        	$("#"+id).prop('checked',true);
+	            	return false;
+            	}
+	        	languages[language_key]['isActive'] = false;
+	        	database.collection('settings').doc('languages').update({'list': languages}).then(function (result) {
+	        });
+        }
+	});
+});
+
+/*toggal publish action code end*/
 
 $(document).on("click","a[name='lang-delete']", function (e) {
-            var id = this.id;
-            var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE'); ?>";
-            if(is_disable_delete == 1){
-                alert(doNotDeleteAlert);
-                return false;
-            }
-            var newlanguage=[];
-            languages.forEach((language) => {
-                if(id!=language.slug){
-                    newlanguage.push(language);
-                }
-            });
-            jQuery("#data-table_processing").show();
-            database.collection('settings').doc('languages').update({'list':newlanguage}).then(function(result) {
-                jQuery("#data-table_processing").hide();
-                window.location.href = '{{ route("settings.app.languages") }}';
-            }); 
-
+	
+    var id = this.id;
+    var newlanguage=[];
+    languages.forEach((language) => {
+        if(id!=language.slug){
+        	delete language['id'];
+        	newlanguage.push(language);
+        }
     });
-
-     function disableClick(){
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE'); ?>";
-    if(is_disable_delete == 1){
-        jQuery("a.do_not_delete").removeAttr("name");
-        jQuery("a.do_not_delete").attr("name","alert_demo");       
-    }
-}
-
-
-$(document).on("click","a[name='alert_demo']", function (e) {
+    jQuery("#data-table_processing").show();
     
-    //alert("This is for demo, We can not allow to delete");
-    alert(doNotDeleteAlert);
-}); 
-
+    database.collection('settings').doc('languages').update({'list':newlanguage}).then(function(result) {
+        jQuery("#data-table_processing").hide();
+        window.location.href = '{{ route("settings.app.languages") }}';
+    }); 
+});
 
 </script>
 

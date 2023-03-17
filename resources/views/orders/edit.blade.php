@@ -23,12 +23,16 @@
     </div>
 
         <div class="card-body">
-      	   <div id="data-table_processing" class="dataTables_processing panel panel-default" style="display: none;">{{trans('lang.processing')}}</div> 
-          <div class="text-right print-btn"><a href="{{route('vendors.orderprint',$id)}}"><button type="button" class="fa fa-print"></button></a></div>  
-        
+      	   <div id="data-table_processing" class="dataTables_processing panel panel-default" style="display: none;">{{trans('lang.processing')}}</div>
+          <div class="text-right print-btn">
+          		<a href="{{route('vendors.orderprint',$id)}}">
+          			<button type="button" class="fa fa-print"></button>
+          		</a>
+          	</div>
+
         <div class="order_detail" id="order_detail">
-          <div class="order_detail-top"> 
-            <div class="row"> 
+          <div class="order_detail-top">
+            <div class="row">
               <div class="order_edit-genrl col-md-4">
 
                 <h3>{{trans('lang.general_details')}}</h3>
@@ -37,22 +41,22 @@
                   <div class="form-group row widt-100 gendetail-col">
                     <label class="col-12 control-label"><strong>{{trans('lang.date_created')}} : </strong><span id="createdAt"></span></label>
                     <!-- <div class="col-7">
-                       <span id="createdAt"></span>   
+                       <span id="createdAt"></span>
                     </div> -->
                   </div>
 
                  <!--  <div class="form-group row widt-100 gendetail-col"> -->
-                  <div class="form-group row widt-100 gendetail-col payment_method"> 
+                  <div class="form-group row widt-100 gendetail-col payment_method">
                     <label class="col-12 control-label"><strong>{{trans('lang.payment_methods')}}: </strong><span id="payment_method"></span></label>
                     <!-- <div class="col-7">
-                       <span id="payment_method"></span>   
+                       <span id="payment_method"></span>
                     </div> -->
                   </div>
 
                   <div class="form-group row widt-100 gendetail-col">
                     <label class="col-12 control-label"><strong>{{trans('lang.order_type')}}:</strong> <span id="order_type"></span></label>
                   </div>
-                     
+
                   <div class="form-group row width-100 ">
                     <label class="col-3 control-label">{{trans('lang.status')}}:</label>
                     <div class="col-7">
@@ -64,7 +68,7 @@
                           <option value="Driver Rejected" id="driver_rejected">{{ trans('lang.driver_rejected')}}</option>
                           <option value="Order Shipped" id="order_shipped">{{ trans('lang.order_shipped')}}</option>
                           <option value="In Transit" id="in_transit">{{ trans('lang.in_transit')}}</option>
-                          <option value="Order Completed" id="order_completed">{{ trans('lang.order_completed')}}</option>            
+                          <option value="Order Completed" id="order_completed">{{ trans('lang.order_completed')}}</option>
                       </select>
                    </div>
                   </div>
@@ -79,7 +83,7 @@
                     <option value="fixed">Cancelled</option>
                     <option value="fixed">Cancelled</option>
                     <option value="fixed">Cancelled</option>
-                  </select> 
+                  </select>
                    </div>
                   </div> -->
                   <div class="form-group row width-100">
@@ -94,51 +98,54 @@
 
               <div class="order_addre-edit col-md-4">
                 <h3>{{ trans('lang.billing_details')}}</h3>
-                  
+
                   <div class="address order_detail-top-box">
                     <p>
-                      <span id="billing_name"></span><br>
-                      <span id="billing_line1"></span><br>
-                      <span id="billing_line2"></span><br>
+                    <strong>{{trans('lang.name')}}: </strong><span id="billing_name"></span>
+                </p>
+                      <p>
+                    <strong>{{trans('lang.address')}}: </strong>
+                    <br><span id="billing_line1"></span>
+                      <span id="billing_line2"></span>
                       <span id="billing_country" ></span>
                     </p>
-                    <p><strong>{{trans('lang.email_address')}}:</strong> 
+                    <p><strong>{{trans('lang.email_address')}}:</strong>
                        <span id="billing_email"></span>
                     </p>
                     <p><strong>{{trans('lang.phone')}}:</strong>
-                      <span id="billing_phone"></span> 
-                    </p> 
+                      <span id="billing_phone"></span>
+                    </p>
                   </div>
               </div>
 
               <div class="order_addre-edit col-md-4 driver_details_hide">
                 <h3>{{ trans('lang.driver_detail')}}</h3>
-                  
+
                 <div class="address order_detail-top-box">
                   <p>
-                      <span id="driver_firstName"></span> <span id="driver_lastName"></span><br>
+                  <strong>{{trans('lang.name')}}: </strong><span id="driver_firstName"></span> <span id="driver_lastName"></span><br>
                   </p>
-                  <p><strong>{{trans('lang.email_address')}}:</strong> 
+                  <p><strong>{{trans('lang.email_address')}}:</strong>
                        <span id="driver_email"></span>
                   </p>
                   <p><strong>{{trans('lang.phone')}}:</strong>
-                    <span id="driver_phone"></span> 
-                  </p> 
+                    <span id="driver_phone"></span>
+                  </p>
                   <p><strong>{{trans('lang.car_name')}}:</strong>
-                    <span id="driver_carName"></span> 
-                  </p> 
+                    <span id="driver_carName"></span>
+                  </p>
                   <p><strong>{{trans('lang.car_number')}}:</strong>
-                    <span id="driver_carNumber"></span> 
-                  </p> 
+                    <span id="driver_carNumber"></span>
+                  </p>
                 </div>
               </div>
 
             </div>
-            
-          </div>          
-          
 
-         
+          </div>
+
+
+
         <div class="order-deta-btm mt-4">
           <div class="row">
             <div class="col-md-8 order-deta-btm-left">
@@ -146,7 +153,7 @@
             <div class="row">
               <div class="col-md-12">
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-valign-middle">
-                   
+
                    <thead>
                      <tr>
                       <th>{{trans('lang.item')}}</th>
@@ -155,7 +162,7 @@
                       <th>{{trans('lang.extras')}}</th>
                       <th>{{trans('lang.total')}}</th>
                     </tr>
-                  
+
                   </thead>
 
                   <tbody id="order_products">
@@ -177,14 +184,14 @@
                                   </div>
                                   <div class="woo-orders-tracking-item-tracking-button-edit-container">
                                    <a href="#"><i class="fa fa-edit"></i></a>
-                          
+
                                   </div>
                               </div>
                             </div>
                         </td>
                         <td>$172.00</td>
                         <td>× 1</td>
-                        <td>$172.00</td> 
+                        <td>$172.00</td>
                     </tr> */ ?>
                   </tbody>
                 </table>
@@ -227,7 +234,7 @@
             </div>
          </div>
         </div>
-         
+
          <div class="col-md-4 order-deta-btm-right">
             <div class="resturant-detail">
               <div class="card">
@@ -246,16 +253,16 @@
                   </a>
 
                   <h5 class="contact-info">{{trans('lang.contact_info')}}:</h5>
-                   <!-- <p><strong>{{trans('lang.email_address')}}:</strong> 
+                   <!-- <p><strong>{{trans('lang.email_address')}}:</strong>
                        <span id="vendor_email"></span>
                     </p> -->
                     <p><strong>{{trans('lang.phone')}}:</strong>
-                      <span id="vendor_phone"></span> 
-                    </p> 
+                      <span id="vendor_phone"></span>
+                    </p>
                      <p><strong>{{trans('lang.address')}}:</strong>
-                      <span id="vendor_address"></span> 
-                    </p> 
-                   
+                      <span id="vendor_address"></span>
+                    </p>
+
                 </div>
              </div>
             </div>
@@ -263,6 +270,19 @@
 
         </div>
         </div>
+
+                            <div class="order_detail-review mt-4">
+                              <div class="row">
+                                <div class="rental-review col-md-12">
+                                  <div class="review-inner">
+                                    <h3>{{trans("lang.customer_reviews")}}</h3>
+                                    <div id="customers_rating_and_review">
+
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
 
        </div>
 
@@ -274,11 +294,11 @@
 
    <!--  </div> -->
 
-            
+
             <div class="form-group col-12 text-center btm-btn">
           <button type="button" class="btn btn-primary save_order_btn" ><i class="fa fa-save"></i> {{trans('lang.save')}}</button>
-          
-          <?php if(isset($_GET['eid']) && $_GET['eid'] != ''){?>            
+
+          <?php if(isset($_GET['eid']) && $_GET['eid'] != ''){?>
               <a href="{{route('restaurants.orders',$_GET['eid'])}}" class="btn btn-default"><i class="fa fa-undo"></i>{{trans('lang.cancel')}}</a>
           <?php }else{ ?>
              <a href="{!! route('orders') !!}" class="btn btn-default"><i class="fa fa-undo"></i>{{trans('lang.cancel')}}</a>
@@ -286,20 +306,20 @@
 
           <!-- <a href="{!! route('orders') !!}" class="btn btn-default"><i class="fa fa-undo"></i>{{trans('lang.cancel')}}</a> -->
       </div>
-            
+
       </div>
 
-      
+
 
           </div>
-        </div>    
+        </div>
 
 
  @endsection
 
 @section('style')
 <style type="text/css">
- 
+
 </style>
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.js"></script>
@@ -315,8 +335,12 @@ var deliveryChargeVal = 0;
 var tip_amount_val = 0;
 var tip_amount=0;
 var vendorname='';
+var page_size = 5;
 var database = firebase.firestore();
 var ref = database.collection('restaurant_orders').where("id","==",id);
+var ref_review_attributes = database.collection('review_attributes');
+var selected_review_attributes = '';
+var refUserReview = database.collection('foods_review').where('orderid', '==', id);
 var append_procucts_list = '';
 var append_procucts_total = '';
 var total_price=0;
@@ -327,38 +351,46 @@ var orderPreviousStatus = '';
 var orderTakeAwayOption = false;
 var manfcmTokenVendor='';
 var manname='';
-refCurrency.get().then( async function(snapshots){  
+var reviewAttributes = {};
+var decimal_degits = 0;
+
+refCurrency.get().then( async function(snapshots){
     var currencyData = snapshots.docs[0].data();
     currentCurrency = currencyData.symbol;
     currencyAtRight = currencyData.symbolAtRight;
-}); 
+
+    if (currencyData.decimal_degits) {
+            decimal_degits = currencyData.decimal_degits;
+        }
+});
 
 
 var geoFirestore = new GeoFirestore(database);
 var place_image ='';
 var ref_place = database.collection('settings').doc("placeHolderImage");
  ref_place.get().then( async function(snapshots){
-
-    var placeHolderImage = snapshots.data();            
-    place_image = placeHolderImage.image;   
-  //  console.log('place_image'+place_image);
-    
+    var placeHolderImage = snapshots.data();
+    place_image = placeHolderImage.image;
 });
 
 $(document).ready(function(){
-    
+
     var alovelaceDocumentRef = database.collection('restaurant_orders').doc();
     if(alovelaceDocumentRef.id){
         id_rendom=alovelaceDocumentRef.id;
     }
-    $(document.body).on('click', '.redirecttopage' ,function(){    
+    $(document.body).on('click', '.redirecttopage' ,function(){
         var url=$(this).attr('data-url');
         window.location.href = url;
     });
 
     jQuery("#data-table_processing").show();
-  
+
     ref.get().then( async function(snapshots){
+    vendorOrder = snapshots.docs[0].data();
+    
+    getUserReview(vendorOrder);
+    
     var order = snapshots.docs[0].data();
 
     append_procucts_list = document.getElementById('order_products');
@@ -367,8 +399,11 @@ $(document).ready(function(){
     append_procucts_total = document.getElementById('order_products_total');
     append_procucts_total.innerHTML='';
 
-
-    $("#billing_name").text(order.address.name);
+	if(order.address.name){	
+	    $("#billing_name").text(order.address.name);
+	}else{
+   		$("#billing_name").text(order.author.firstName+' '+order.author.lastName);
+    }
     var billingAddressstring = '';
 
     $("#trackng_number").text(id);
@@ -376,32 +411,32 @@ $(document).ready(function(){
       $("#billing_line1").text(order.address.line1);
     }
     if(order.address.hasOwnProperty('line2')){
-      billingAddressstring = billingAddressstring + order.address.line2; 
+      billingAddressstring = billingAddressstring + order.address.line2;
     }
     if(order.address.hasOwnProperty('city')){
-      billingAddressstring = billingAddressstring+", "+ order.address.city; 
+      billingAddressstring = billingAddressstring+", "+ order.address.city;
     }
 
     if(order.address.hasOwnProperty('postalCode')){
-      billingAddressstring = billingAddressstring+", "+ order.address.postalCode; 
+      billingAddressstring = billingAddressstring+", "+ order.address.postalCode;
     }
 
-    if(order.author.hasOwnProperty('phoneNumber')){ 
+    if(order.author.hasOwnProperty('phoneNumber')){
       $("#billing_phone").text(order.author.phoneNumber);
     }
-    
-    $("#billing_line2").text(billingAddressstring);  
-  
+
+    $("#billing_line2").text(billingAddressstring);
+
     if(order.address.hasOwnProperty('country')){
-    
-      $("#billing_country").text(order.address.country); 
-    
+
+      $("#billing_country").text(order.address.country);
+
     }
 
     if(order.address.hasOwnProperty('email')){
-      $("#billing_email").html('<a href="mailto:'+order.address.email+'">'+order.address.email+'</a>'); 
+      $("#billing_email").html('<a href="mailto:'+order.address.email+'">'+order.address.email+'</a>');
     }
-   
+
     if (order.createdAt) {
         var date1 = order.createdAt.toDate().toDateString();
         var date = new Date(date1);
@@ -410,7 +445,7 @@ $(document).ready(function(){
         var yyyy = date.getFullYear();
         var createdAt_val = yyyy + '-' + mm + '-' + dd;
         var time = order.createdAt.toDate().toLocaleTimeString('en-US');
-        //console.log('time'+time);
+        
       $('#createdAt').text(createdAt_val+' '+time);
     }
 
@@ -484,8 +519,8 @@ $(document).ready(function(){
         append_procucts_total.innerHTML=productstotalHTML;
      }
 
-  // var address = 
-  
+  // var address =
+
     orderPreviousStatus = order.status;
     if (order.hasOwnProperty('payment_method')) {
         orderPaymentMethod = order.payment_method;
@@ -507,54 +542,49 @@ $(document).ready(function(){
 
 
     if (order.vendorID) {
+      console.log(order.vendorID)
       var vendor = database.collection('vendors').where("id","==",order.vendorID);
-      
+
       vendor.get().then( async function(snapshotsnew){
+        
         var vendordata = snapshotsnew.docs[0].data();
 
           if (vendordata.id) {
               var route_view =  '{{route("restaurants.view",":id")}}';
                 route_view = route_view.replace(':id', vendordata.id);
 
-              $('#resturant-view').attr('data-url',route_view);  
+              $('#resturant-view').attr('data-url',route_view);
           }
           if (vendordata.photo) {
-              $('.resturant-img').attr('src',vendordata.photo);  
+              $('.resturant-img').attr('src',vendordata.photo);
           }else{
-              $('.resturant-img').attr('src',place_image); 
+              $('.resturant-img').attr('src',place_image);
           }
           if (vendordata.title) {
-              $('.vendor-title').html(vendordata.title);  
+              $('.vendor-title').html(vendordata.title);
           }
 
           // if (vendordata.title) {
-          //     $('#vendor_email').html(vendordata.title);  
+          //     $('#vendor_email').html(vendordata.title);
           // }
           if (vendordata.phonenumber) {
-              $('#vendor_phone').text(vendordata.phonenumber);  
+              $('#vendor_phone').text(vendordata.phonenumber);
           }
           if (vendordata.location) {
-              $('#vendor_address').text(vendordata.location);  
+              $('#vendor_address').text(vendordata.location);
           }
-
+        
       });
 
     }
 
- 
+
        jQuery("#data-table_processing").hide();
   })
 
 
 $(".save_order_btn").click(async function(){
 
-  
-  var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-                if(is_disable_delete == 1){
-                    alert("Do not alllow to change in demo content !");
-                    return false;
-                }
-                
   var clientName = $(".client_name").val();
   var orderStatus = $("#order_status").val();
   if(old_order_status!=orderStatus){
@@ -569,12 +599,12 @@ $(".save_order_btn").click(async function(){
               }
               if (orderStatus != orderPreviousStatus && payment_shared==false) {
                   if (orderStatus == 'Order Completed') {
-                    
+
                   vendorAmount=parseFloat(total_price) - (parseFloat(adminCommission));
                   driverAmount=parseFloat(deliveryChargeVal) + parseFloat(tip_amount);
                   var vendor = database.collection('users').where("vendorID", "==", vendorId);
                   var vendorWallet = 0;
-                  await database.collection('order_transactions').doc(id_rendom).set({'date': vendorWallet,'driverAmount':driverAmount,'driverId':vendorId,'id':id_rendom,'order_id':id,'vendorAmount':vendorAmount,'vendorId':vendorAuthor}).then( async function (result) { 
+                  await database.collection('order_transactions').doc(id_rendom).set({'date': vendorWallet,'driverAmount':driverAmount,'driverId':vendorId,'id':id_rendom,'order_id':id,'vendorAmount':vendorAmount,'vendorId':vendorAuthor}).then( async function (result) {
                           await vendor.get().then(async function (snapshotsnew) {
                               var vendordata = snapshotsnew.docs[0].data();
                               if(vendordata){
@@ -588,16 +618,16 @@ $(".save_order_btn").click(async function(){
                                   }else{
                                       vendorWallet=vendorWallet+parseFloat(vendorAmount);
                                   }
-                                  
+
                                   if(!isNaN(vendorWallet)){
                                     database.collection('users').doc(vendordata.id).update({'wallet_amount': vendorWallet}).then(function (result) {
-                                          
+
                                   });
                                   }
 
                               }
                           });
-                      if(driverId && driverAmount){   
+                      if(driverId && driverAmount){
                           var driver = database.collection('users').where("id", "==", driverId);
                           await driver.get().then(async function (snapshotsdriver) {
                               var driverdata = snapshotsdriver.docs[0].data();
@@ -614,7 +644,7 @@ $(".save_order_btn").click(async function(){
                                   }
                                   if(!isNaN(vendorWallet)){
                                     await database.collection('users').doc(driverdata.id).update({'wallet_amount': driverWallet}).then( async function (result) {
-                                    
+
                                     });
                                   }
 
@@ -654,7 +684,7 @@ $(".save_order_btn").click(async function(){
                                   window.location.href = '{{ route("orders")}}';
                               })
                           } else {
-                          
+
                               window.location.href = '{{ route("orders")}}';
                           }
                       } else {
@@ -675,13 +705,13 @@ $(".save_order_btn").click(async function(){
                          window.location.href = "{{ route('restaurants.orders',$_GET['eid']) }}";
                     <?php }else{ ?>
                          window.location.href = '{{ route("orders")}}';
-                    <?php } ?>       
+                    <?php } ?>
                  }
                });
-             
-        }); 
+
+        });
  }
-   
+
 })
 
 })
@@ -694,11 +724,11 @@ function buildHTMLProductsList(snapshotsProducts){
         var alldata=[];
         var number= [];
         var totalProductPrice=0;
-       
+
         snapshotsProducts.forEach((product) => {
-            
+
             var val=product;
-            
+
                 html=html+'<tr>';
 
                 var extra_html='';
@@ -707,7 +737,7 @@ function buildHTMLProductsList(snapshotsProducts){
                   var extra_count=1;
                   try{
                   product.extras.forEach((extra) => {
-                    
+
                     if(extra_count>1){
                       extra_html=extra_html+','+extra;
                      }else{
@@ -724,14 +754,25 @@ function buildHTMLProductsList(snapshotsProducts){
 
                 html=html+'<td class="order-product"><div class="order-product-box">';
 
-                
+
                 if(val.photo != ''){
-                  html=html +'<img class="img-circle img-size-32 mr-2" style="width:60px;height:60px;" src="'+val.photo+'" alt="image">';  
+                  html=html +'<img class="img-circle img-size-32 mr-2" style="width:60px;height:60px;" src="'+val.photo+'" alt="image">';
                 }else{
                   html=html +'<img class="img-circle img-size-32 mr-2" style="width:60px;height:60px;" src="'+place_image+'" alt="image">';
                 }
-                
+
                 html=html+'</div><div class="orders-tracking"><h6>'+val.name+'</h6><div class="orders-tracking-item-details">';
+                
+                if (val.variant_info) {
+                    html = html + '<div class="variant-info">';
+                    html = html + '<ul>';
+                    $.each(val.variant_info.variant_options, function (label, value) {
+                        html = html + '<li class="variant"><span class="label">' + label + '</span><span class="value">' + value + '</span></li>';
+                    });
+                    html = html + '</ul>';
+                    html = html + '</div>';
+                }
+                
                 if(extra_count>1 || product.size){
                   html=html+'<strong>{{trans("lang.extras")}} :</strong>';
                 }
@@ -743,44 +784,44 @@ function buildHTMLProductsList(snapshotsProducts){
                 }
 
                 /*<div class="woo-orders-tracking-item-tracking-button-edit-container"><a href="#"><i class="fa fa-edit"></i></a></div>*/
-                
+
                 //price_item=parseFloat(val.price).toFixed(2);
                 /*if(val.hasOwnProperty('discountPrice') && val.discountPrice != ''){
                     price_item=parseFloat(val.discountPrice).toFixed(2);
                 }else{*/
-                    price_item=parseFloat(val.price).toFixed(2);  
+                    price_item=parseFloat(val.price).toFixed(decimal_degits);
                 /*}*/
                 totalProductPrice =  parseFloat(price_item)*parseInt(val.quantity);
                 var extras_price=0;
                 if(product.extras!=undefined && product.extras!='' && product.extras.length>0){
-                  extras_price_item=(parseFloat(val.extras_price)*parseInt(val.quantity)).toFixed(2);
+                  extras_price_item=(parseFloat(val.extras_price)*parseInt(val.quantity)).toFixed(decimal_degits);
                   if(parseFloat(extras_price_item)!=NaN && val.extras_price!=undefined){
                       extras_price=extras_price_item;
                   }
                   totalProductPrice =parseFloat(extras_price)+parseFloat(totalProductPrice);
                 }
-                totalProductPrice=parseFloat(totalProductPrice).toFixed(2);
+                totalProductPrice=parseFloat(totalProductPrice).toFixed(decimal_degits);
 
-                if(currencyAtRight){
-                    price_val = price_item+""+currentCurrency;
-                    extras_price_val = extras_price+""+currentCurrency;
-                    totalProductPrice_val = totalProductPrice+""+currentCurrency;
-                }else{
-                   price_val = currentCurrency+""+price_item;
-                  extras_price_val = currentCurrency+""+extras_price;
-                   totalProductPrice_val = currentCurrency+""+totalProductPrice;
-                }
+                if (currencyAtRight) {
+                price_val = parseFloat(price_item).toFixed(decimal_degits) + "" + currentCurrency;
+                extras_price_val = parseFloat(extras_price).toFixed(decimal_degits) + "" + currentCurrency;
+                totalProductPrice_val = parseFloat(totalProductPrice).toFixed(decimal_degits) + "" + currentCurrency;
+            } else {
+                price_val = currentCurrency + "" + parseFloat(price_item).toFixed(decimal_degits);
+                extras_price_val = currentCurrency + "" + parseFloat(extras_price).toFixed(decimal_degits);
+                totalProductPrice_val = currentCurrency + "" + parseFloat(totalProductPrice).toFixed(decimal_degits);
+            }
 
                 html=html+'</div></div></td>';
-                html=html+'<td>'+price_val+'</td><td> × '+val.quantity+'</td><td> + '+extras_price_val+'</td><td>  '+totalProductPrice_val+'</td>'; 
-        
+                html=html+'<td>'+price_val+'</td><td> × '+val.quantity+'</td><td> + '+extras_price_val+'</td><td>  '+totalProductPrice_val+'</td>';
+
                 html=html+'</tr>';
-                total_price +=parseFloat(totalProductPrice);                
-           
+                total_price +=parseFloat(totalProductPrice);
+
           });
           totalProductPrice=0;
-          
-          return html;      
+
+          return html;
 }
 
 
@@ -804,17 +845,16 @@ function buildHTMLProductstotal(snapshotsProducts){
         var products = snapshotsProducts.products;
         var deliveryCharge = snapshotsProducts.deliveryCharge;
         var specialDiscount = snapshotsProducts.specialDiscount;
-        
+
         var intRegex = /^\d+$/;
         var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+))$/;
-        
+
         if (products) {
 
           products.forEach((product) => {
 
               var val=product;
-              console.log(product);
-
+              
               /*if(intRegex.test(val.addon_price) || floatRegex.test(val.addon_price)) {
                 total_price +=val.addon_price;
               }*/
@@ -822,7 +862,7 @@ function buildHTMLProductstotal(snapshotsProducts){
               //   total_price +=parseInt(val.price)*parseInt(val.quantity);
               // }
              /* if (val.addon_name && val.addon_price) {
-                html=html+'<tr><td class="label">Addon : '+val.addon_name+'</td><td class="total">'+val.addon_price+'</td></tr>';           
+                html=html+'<tr><td class="label">Addon : '+val.addon_name+'</td><td class="total">'+val.addon_price+'</td></tr>';
               }*/
           });
         }
@@ -834,16 +874,17 @@ function buildHTMLProductstotal(snapshotsProducts){
 
             html=html+'<tr><td class="label">Extras : '+extra_val+'</td><td class="total">'+extras_price+'</td></tr>';
           }*/
-          
+
           if(intRegex.test(discount) || floatRegex.test(discount)) {
 
-            discount=parseFloat(discount).toFixed(2);
+            discount=parseFloat(discount).toFixed(decimal_degits);
             total_price -=parseFloat(discount);
 
-            if(currencyAtRight){
-                discount_val = discount+""+currentCurrency;
-            }else{
-               discount_val = currentCurrency+""+discount;
+          
+            if (currencyAtRight) {
+                discount_val = parseFloat(discount).toFixed(decimal_degits) + "" + currentCurrency;
+            } else {
+                discount_val = currentCurrency + "" + parseFloat(discount).toFixed(decimal_degits);
             }
 
             couponCode_html='';
@@ -852,10 +893,10 @@ function buildHTMLProductstotal(snapshotsProducts){
             }
             html=html+'<tr><td class="label">{{trans("lang.discount")}}'+couponCode_html+'</td><td class="discount">-'+discount_val+'</td></tr>';
           }
-       
-          
 
-             
+
+
+
             if(specialDiscount != undefined) {
 
             special_discount=parseFloat(specialDiscount.special_discount).toFixed(2);
@@ -896,9 +937,9 @@ function buildHTMLProductstotal(snapshotsProducts){
 
              if(!isNaN(tax) && tax!=0){
                 if(currencyAtRight){
-                  html=html+'<tr><td class="label">{{trans("lang.tax")}}</td><td class="deliveryCharge">+'+tax.toFixed(2)+''+currentCurrency+'('+taxlabel+' '+snapshotsProducts.taxSetting.tax+' '+taxlabeltype+')</td></tr>';
+                  html=html+'<tr><td class="label">{{trans("lang.tax")}}</td><td class="deliveryCharge">+'+tax.toFixed(decimal_degits)+''+currentCurrency+'('+taxlabel+' '+snapshotsProducts.taxSetting.tax+' '+taxlabeltype+')</td></tr>';
                 }else{
-                  html=html+'<tr><td class="label">{{trans("lang.tax")}}</td><td class="deliveryCharge">+'+currentCurrency+tax.toFixed(2)+'('+taxlabel+' '+snapshotsProducts.taxSetting.tax +' '+taxlabeltype+')</td></tr>';
+                  html=html+'<tr><td class="label">{{trans("lang.tax")}}</td><td class="deliveryCharge">+'+currentCurrency+tax.toFixed(decimal_degits)+'('+taxlabel+' '+snapshotsProducts.taxSetting.tax +' '+taxlabeltype+')</td></tr>';
                 }
 
                 total_price = total_price + tax;
@@ -906,50 +947,49 @@ function buildHTMLProductstotal(snapshotsProducts){
 
              if(intRegex.test(deliveryCharge) || floatRegex.test(deliveryCharge)) {
 
-                deliveryCharge=parseFloat(deliveryCharge).toFixed(2);
+                deliveryCharge=parseFloat(deliveryCharge).toFixed(decimal_degits);
                 total_price +=parseFloat(deliveryCharge);
-                
-                if(currencyAtRight){
-                  deliveryCharge_val = deliveryCharge+""+currentCurrency;
-                }else{
-                   deliveryCharge_val = currentCurrency+""+deliveryCharge;
-                }
+
+                if (currencyAtRight) {
+                deliveryCharge_val = parseFloat(deliveryCharge).toFixed(decimal_degits) + "" + currentCurrency;
+            } else {
+                deliveryCharge_val = currentCurrency + "" + parseFloat(deliveryCharge).toFixed(decimal_degits);
+            }
                 if (takeAway =='' || takeAway == false) {
                     deliveryChargeVal = deliveryCharge;
                     html=html+'<tr><td class="label">{{trans("lang.deliveryCharge")}}</td><td class="deliveryCharge">+'+deliveryCharge_val+'</td></tr>';
                 }
           }
 
-       
+
           var total_item_price=total_price;
-          if(intRegex.test(tip_amount) || floatRegex.test(tip_amount)) {
+          if (intRegex.test(tip_amount) || floatRegex.test(tip_amount)) {
 
-              tip_amount=parseFloat(tip_amount).toFixed(2);
-              total_price +=parseFloat(tip_amount);
-              total_price=parseFloat(total_price).toFixed(2);
-              
-                if(currencyAtRight){
-                  tip_amount_val = tip_amount+""+currentCurrency;
-                }else{
-                   tip_amount_val = currentCurrency+""+tip_amount;
-                }
-                if (takeAway =='' || takeAway == false) {
-                    html=html+'<tr><td class="label">{{trans("lang.tip_amount")}}</td><td class="tip_amount_val">+'+tip_amount_val+'</td></tr>';
-                }
-            }
+              tip_amount = parseFloat(tip_amount).toFixed(decimal_degits);
+              total_price += parseFloat(tip_amount);
+              total_price = parseFloat(total_price).toFixed(decimal_degits);
 
-            if(currencyAtRight){
-              total_price_val = parseFloat(total_price).toFixed(2)+""+currentCurrency;
-            }else{
-               total_price_val = currentCurrency+""+parseFloat(total_price).toFixed(2);
-            }
+              if (currencyAtRight) {
+                  tip_amount_val = parseFloat(tip_amount).toFixed(decimal_degits) + "" + currentCurrency;
+              } else {
+                  tip_amount_val = currentCurrency + "" + parseFloat(tip_amount).toFixed(decimal_degits);
+              }
+              if (takeAway == '' || takeAway == false) {
+                  html = html + '<tr><td class="label">{{trans("lang.tip_amount")}}</td><td class="tip_amount_val">+' + tip_amount_val + '</td></tr>';
+              }
+              }
+
+              if (currencyAtRight) {
+              total_price_val = parseFloat(total_price).toFixed(decimal_degits) + "" + currentCurrency;
+              } else {
+              total_price_val = currentCurrency + "" + parseFloat(total_price).toFixed(decimal_degits);
+              }
 
           html=html+'<tr><td class="label">{{trans("lang.total_amount")}}</td><td class="total_price_val">'+total_price_val+'</td></tr>';
 
           if(adminCommission!=undefined && adminCommissionType!=undefined){
               var commission = 0;
-              console.log(total_item_price);
-              console.log("total_item_price");
+              
               if(adminCommissionType=="Percent"){
                   commission = (total_item_price*parseFloat(adminCommission))/100;
               }else{
@@ -960,26 +1000,26 @@ function buildHTMLProductstotal(snapshotsProducts){
                 var commission = parseFloat(adminCommission);
                 adminCommission = commission;
           }
-          
+
           if (adminCommission) {
 
-            adminCommission = parseFloat(adminCommission).toFixed(2);
-            if(currencyAtRight){
-              adminCommission_val = adminCommission+""+currentCurrency;
-            }else{
-               adminCommission_val = currentCurrency+""+adminCommission;
+            adminCommission = parseFloat(adminCommission).toFixed(decimal_degits);
+            if (currencyAtRight) {
+                adminCommission_val = parseFloat(adminCommission).toFixed(decimal_degits)+ "" + currentCurrency;
+            } else {
+                adminCommission_val = currentCurrency + "" + parseFloat(adminCommission).toFixed(decimal_degits);
             }
-              html=html+'<tr><td class="label"><small>( {{trans("lang.admin_commission")}} </small></td><td class="adminCommission_val"><small>'+adminCommission_val+')</small></td></tr>';            
+              html=html+'<tr><td class="label"><small>( {{trans("lang.admin_commission")}} </small></td><td class="adminCommission_val"><small>'+adminCommission_val+')</small></td></tr>';
           }
 
              if (notes) {
 
-          
-              html=html+'<tr><td class="label">{{trans("lang.notes")}}</td><td class="adminCommission_val">'+notes+'</td></tr>';            
+
+              html=html+'<tr><td class="label">{{trans("lang.notes")}}</td><td class="adminCommission_val">'+notes+'</td></tr>';
           }
 
-        
-          return html;      
+
+          return html;
 }
 
 function PrintElem(elem)
@@ -1001,18 +1041,18 @@ function PrintElem(elem)
     return true;*/
 
     jQuery('#'+elem).printThis({
-        debug: false, 
+        debug: false,
         importStyle:true,
         loadCSS:[
                 '<?php echo asset('assets/plugins/bootstrap/css/bootstrap.min.css'); ?>',
-                '<?php echo asset('css/style.css'); ?>',                
-                '<?php echo asset('css/colors/blue.css'); ?>',                
-                '<?php echo asset('css/icons/font-awesome/css/font-awesome.css'); ?>',                
-                '<?php echo asset('assets/plugins/toast-master/css/jquery.toast.css'); ?>',                
+                '<?php echo asset('css/style.css'); ?>',
+                '<?php echo asset('css/colors/blue.css'); ?>',
+                '<?php echo asset('css/icons/font-awesome/css/font-awesome.css'); ?>',
+                '<?php echo asset('assets/plugins/toast-master/css/jquery.toast.css'); ?>',
                 ],
-                
+
        // printContainer: false,
-       
+
         //pageTitle: "",              // add title to print page
         //removeInline: false,        // remove inline styles from print elements
         //removeInlineSelector: "*",  // custom selectors to filter inline styles. removeInline must be true
@@ -1033,6 +1073,133 @@ function PrintElem(elem)
 
 
 }
+
+        //Review code GA
+        var refReviewAttributes = database.collection('review_attributes');
+        refReviewAttributes.get().then(async function (snapshots) {
+            if (snapshots != undefined) {
+                snapshots.forEach((doc) => {
+                    var data = doc.data();
+                    reviewAttributes[data.id] = data.title;
+                });
+            }
+        });
+
+        function getUserReview(vendorOrder, reviewAttr) {
+            var refUserReview = database.collection('foods_review').where('orderid', "==", vendorOrder.id);
+            refUserReview.limit(page_size).get().then(async function (userreviewsnapshot) {
+                var reviewHTML = '';
+                reviewHTML = buildRatingsAndReviewsHTML(vendorOrder, userreviewsnapshot);
+                
+                if (userreviewsnapshot.docs.length > 0) {
+                    jQuery("#customers_rating_and_review").append(reviewHTML);
+                }
+                else{
+                    jQuery("#customers_rating_and_review").html('<h4>No Reviews Found</h4>');
+                }
+            });
+        }
+
+        function buildRatingsAndReviewsHTML(vendorOrder, userreviewsnapshot) {
+            var allreviewdata = [];
+            var reviewhtml = '';
+            
+            userreviewsnapshot.docs.forEach((listval) => {
+                var reviewDatas = listval.data();
+                reviewDatas.id = listval.id;
+                allreviewdata.push(reviewDatas);
+            });
+            
+            reviewhtml += '<div class="user-ratings">';
+            allreviewdata.forEach((listval) => {
+                var val = listval;
+                
+                vendorOrder.products.forEach((productval) => {
+            
+                    if (productval.id == val.productId) {
+                        rating = val.rating;
+                        reviewhtml = reviewhtml + '<div class="reviews-members py-3 border mb-3"><div class="media">';
+                        if(productval.photo != ''){
+                        reviewhtml = reviewhtml + '<a href="javascript:void(0);"><img alt="#" src="' + productval.photo + '" class=" img-circle img-size-32 mr-2" style="width:60px;height:60px"></a>';
+                        }else{
+                        reviewhtml = reviewhtml + '<a href="javascript:void(0);"><img alt="#" src="' +place_image+ '" class=" img-circle img-size-32 mr-2" style="width:60px;height:60px"></a>';
+                        }
+                        reviewhtml = reviewhtml + '<div class="media-body d-flex"><div class="reviews-members-header"><h6 class="mb-0"><a class="text-dark" href="javascript:void(0);">' + productval.name + '</a></h6><div class="star-rating"><div class="d-inline-block" style="font-size: 14px;">';
+                        reviewhtml = reviewhtml + ' <ul class="rating" data-rating="' + rating + '">';
+                        reviewhtml = reviewhtml + '<li class="rating__item"></li>';
+                        reviewhtml = reviewhtml + '<li class="rating__item"></li>';
+                        reviewhtml = reviewhtml + '<li class="rating__item"></li>';
+                        reviewhtml = reviewhtml + '<li class="rating__item"></li>';
+                        reviewhtml = reviewhtml + '<li class="rating__item"></li>';
+                        reviewhtml = reviewhtml + '</ul>';
+                        reviewhtml = reviewhtml + '</div></div>';
+                        reviewhtml = reviewhtml + '</div>';
+                        reviewhtml = reviewhtml + '<div class="review-date ml-auto">';
+                        if (val.createdAt != null && val.createdAt != "") {
+                            var review_date = val.createdAt.toDate().toLocaleDateString('en', {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric"
+                            });
+                            reviewhtml = reviewhtml + '<span>' + review_date + '</span>';
+                        }
+                        reviewhtml = reviewhtml + '</div>';
+                        var photos = '';
+                        
+                        if (val.photos.length > 0) {
+                            photos += '<div class="photos"><ul>';
+                            $.each(val.photos, function (key, img) {
+                                photos += '<li><img src="' + img + '" width="100"></li>';
+                            });
+                            photos += '</ul></div>';
+                        }
+                        reviewhtml = reviewhtml + '</div></div><div class="reviews-members-body w-100"><p class="mb-2">' + val.comment + '</p>' + photos + '</div>';
+                        if (val.hasOwnProperty('reviewAttributes') && val.reviewAttributes != null) {
+                            reviewhtml += '<div class="attribute-ratings feature-rating mb-2">';
+                            var label_feature = "{{trans('lang.byfeature')}}";
+                            reviewhtml += '<h3 class="mb-2">' + label_feature + '</h3>';
+                            reviewhtml += '<div class="media-body">';
+                            $.each(val.reviewAttributes, function (aid, data) {
+                                var at_id = aid;
+                                var at_title = reviewAttributes[aid];
+                                var at_value = data;
+                                reviewhtml += '<div class="feature-reviews-members-header d-flex mb-3">';
+                                reviewhtml += '<h6 class="mb-0">' + at_title + '</h6>';
+                                reviewhtml = reviewhtml + '<div class="rating-info ml-auto d-flex">';
+                                reviewhtml = reviewhtml + '<div class="star-rating">';
+                                reviewhtml = reviewhtml + ' <ul class="rating" data-rating="' + at_value + '">';
+                                reviewhtml = reviewhtml + '<li class="rating__item"></li>';
+                                reviewhtml = reviewhtml + '<li class="rating__item"></li>';
+                                reviewhtml = reviewhtml + '<li class="rating__item"></li>';
+                                reviewhtml = reviewhtml + '<li class="rating__item"></li>';
+                                reviewhtml = reviewhtml + '<li class="rating__item"></li>';
+                                reviewhtml = reviewhtml + '</ul>';
+                                reviewhtml += '</div>';
+
+                                reviewhtml += '<div class="count-rating ml-2">';
+                                reviewhtml += '<span class="count">' + at_value + '</span>';
+                                reviewhtml += '</div>';
+
+
+                                reviewhtml += '</div></div>';
+                            });
+                            reviewhtml += '</div></div>';
+                        }
+                        reviewhtml += '</div>';
+                    }
+                    reviewhtml += '</div>';
+                });
+
+
+            });
+
+            reviewhtml += '</div>';
+
+            return reviewhtml;
+        }
+
+        //End Review Code
+
 </script>
 
 @endsection

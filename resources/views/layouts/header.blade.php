@@ -45,28 +45,6 @@
         </div>
     </div>
     <ul class="navbar-nav my-lg-0">
-        <!-- ============================================================== -->
-                <!-- ============================================================== -->
-        <!-- Language -->
-        <!-- ============================================================== -->
-       <!--  <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="flag-icon flag-icon-gb"></i></a>
-            <div class="dropdown-menu dropdown-menu-right scale-up">
-                <a class="dropdown-item" href="#" onclick="setLang('in');"><i class="flag-icon flag-icon-in"></i> भारत</a>
-                <a class="dropdown-item" href="#" onclick="setLang('fr');"><i class="flag-icon flag-icon-fr"></i> Français</a>
-                <a class="dropdown-item" href="#" onclick="setLang('cn');"><i class="flag-icon flag-icon-cn"></i> 中国</a>
-                <a class="dropdown-item" href="#" onclick="setLang('de');"><i class="flag-icon flag-icon-de"></i> Deutschland</a>
-                <a class="dropdown-item" href="#" onclick="setLang('esp');"><i class="flag-icon flag-icon-es"></i> España</a>
-                <a class="dropdown-item" href="#" onclick="setLang('jp');"><i class="flag-icon flag-icon-jp"></i> 日本</a>
-                <a class="dropdown-item" href="#" onclick="setLang('ko');"><i class="flag-icon flag-icon-kp"></i> 한국어</a>
-                <a class="dropdown-item" href="#" onclick="setLang('pt');"><i class="flag-icon flag-icon-pt"></i> Português</a>
-                <a class="dropdown-item" href="#" onclick="setLang('ru');"><i class="flag-icon flag-icon-ru"></i> русский</a>
-                <a class="dropdown-item" href="#" onclick="setLang('sa');"><i class="flag-icon flag-icon-sa"></i> عرب</a>
-                <a class="dropdown-item" href="#" onclick="setLang('bn');"><i class="flag-icon flag-icon-bd"></i> বাংলা</a>
-            </div>
-        </li> -->
-
-        <!-- Profil -->
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{ asset('/images/users/user-new.png') }}" alt="user" class="profile-pic"></a>
             <div class="dropdown-menu dropdown-menu-right scale-up">
@@ -83,10 +61,6 @@
                     </li>
                     <li role="separator" class="divider"></li>
                     <li><a href="{{ route('users.profile') }}"><i class="ti-user"></i>  {!! trans('lang.user_profile') !!}</a></li>
-                    <!-- <li><a href="#"><i class="ti-wallet"></i> My Balance</a></li> -->
-                    <!-- <li><a href="#"><i class="ti-email"></i> Mot de passe</a></li> -->
-                    <!-- <li role="separator" class="divider"></li>
-                    <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li> -->
                     <li role="separator" class="divider"></li>
                     <li><a href="{{ route('logout') }}"
                                onclick="event.preventDefault();
@@ -99,7 +73,3 @@
         </li>
     </ul>
 </div>
-
-<script>
-    var doNotDeleteAlert = "This is for demo, We can not allow to delete";
-</script>

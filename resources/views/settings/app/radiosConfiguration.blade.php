@@ -32,15 +32,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="form-group row width-50">
-                            <label class="col-4 control-label">{{ trans('lang.driver_nearby_radios')}}</label>
-                            <div class="col-7">
-                                <div class="control-inner">
-                                    <input type="number" class="form-control driver_nearby_radios" required>
-                                    <span>{{ trans('lang.miles')}}</span>
-                                </div>
-                            </div>
-                        </div> -->
                     </fieldset>
                 </div>
             </div>
@@ -59,15 +50,16 @@
 
     <script>
 
-
         var database = firebase.firestore();
         var ref = database.collection('settings').doc("RestaurantNearBy");
-        var refDriver = database.collection('settings').doc("DriverNearBy");
-
-
+        
+        
         $(document).ready(function () {
+        
             jQuery("#data-table_processing").show();
+        
             ref.get().then(async function (snapshots) {
+        
                 var radios = snapshots.data();
 
                 if (radios == undefined) {
@@ -76,11 +68,6 @@
 
                 try {
                     $(".restaurant_near_by").val(radios.radios);
-
-                    refDriver.get().then(async function (snapshots) {
-                        var radios = snapshots.data();
-                        $(".driver_nearby_radios").val(radios.driverRadios);
-                    })
 
                 } catch (error) {
 
@@ -92,29 +79,15 @@
 
         $(".restaurant_near_by_save_btn").click(function () {
 
-            var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-            if (is_disable_delete == 1) {
-                alert("Do not alllow to change in demo content !");
-                return false;
-            }
-
             var restaurantNearBy = $(".restaurant_near_by").val();
-            var driverNearBy = $(".driver_nearby_radios").val();
+            
             if (restaurantNearBy == '') {
                 $(".error_top").show();
                 $(".error_top").html("");
                 $(".error_top").append("<p>{{trans('lang.enter_restaurant_nearby_error')}}</p>");
-            } else if (driverNearBy == '') {
-                $(".error_top").show();
-                $(".error_top").html("");
-                $(".error_top").append("<p>{{trans('lang.enter_driver_nearby_radios_error')}}</p>");
             } else {
                 database.collection('settings').doc("RestaurantNearBy").update({'radios': restaurantNearBy}).then(function (result) {
-
-                    database.collection('settings').doc("DriverNearBy").update({'driverRadios': driverNearBy}).then(function (result) {
-                        window.location.href = '{{ url()->current() }}';
-                    });
-
+					window.location.reload();
                 });
             }
 

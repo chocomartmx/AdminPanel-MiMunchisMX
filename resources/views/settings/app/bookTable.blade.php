@@ -75,11 +75,6 @@
 
         $(".save_booking_table_btn").click(function(){
 
-          var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE',0); ?>";
-          if(is_disable_delete == 1){
-            alert("Do not alllow to change in demo content !");
-            return false;    
-          }
           var checkboxValue = $("#enable_dine_in_for_restaurant").is(":checked");
           var isEnabledForCustomer = $('#dine_in_customers').is(":checked");
               database.collection('settings').doc("DineinForRestaurant").update({'isEnabled':checkboxValue,'isEnabledForCustomer':isEnabledForCustomer}).then(function(result) {

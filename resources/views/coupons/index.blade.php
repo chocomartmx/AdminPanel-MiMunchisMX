@@ -1,10 +1,5 @@
 @extends('layouts.app')
 
-<?php 
-
-error_reporting(E_ALL ^ E_NOTICE); 
- ?>
-
 @section('content')
         <div class="page-wrapper">
 
@@ -60,9 +55,6 @@ error_reporting(E_ALL ^ E_NOTICE);
                                 <li>
                                     <a href="{{route('restaurants.orders',$id)}}">{{trans('lang.tab_orders')}}</a>
                                 </li>
-                                <li>
-                                    <a href="{{route('restaurants.reviews',$id)}}">{{trans('lang.tab_reviews')}}</a>
-                                </li>
                                 <li class="active">
                                     <a href="{{route('restaurants.coupons',$id)}}">{{trans('lang.tab_promos')}}</a>
                                 <li>
@@ -113,17 +105,27 @@ error_reporting(E_ALL ^ E_NOTICE);
 
                                 <div class="table-responsive m-t-10">
 
-                                    <table id="example24" class="display nowrap table table-hover table-striped table-bordered table table-striped" cellspacing="0" width="100%">
+                                    <table id="couponTable" class="display nowrap table table-hover table-striped table-bordered table table-striped" cellspacing="0" width="100%">
 
                                         <thead>
 
                                             <tr>
-
+                                            <th class="delete-all"><input type="checkbox" id="is_active"><label
+                                            class="col-3 control-label" for="is_active"
+                                    ><a id="deleteAll" class="do_not_delete"
+                                        href="javascript:void(0)"><i
+                                                    class="fa fa-trash"></i> {{trans('lang.all')}}</a></label></th>
                                                 <th>{{trans('lang.coupon_code')}}</th>
                                                 
                                                 <th >{{trans('lang.coupon_discount')}}</th>
                                                 
                                                 <th >{{trans('lang.coupon_description')}}</th>
+
+                                                <th >{{trans('lang.coupon_restaurant_id')}}</th>
+
+                                                
+
+                                                
                                                 
                                                 <th >{{trans('lang.coupon_expires_at')}}</th>
                                                 
@@ -173,11 +175,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 @endsection
 
 @section('scripts')
-  <!--   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.1.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.1.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.1.0/firebase-database.js"></script>
-    <script type="text/javascript">@include('vendor.notifications.init_firebase')</script> -->
+
 
 <script type="text/javascript">
  
@@ -199,11 +197,16 @@ error_reporting(E_ALL ^ E_NOTICE);
 
     var currentCurrency = '';
     var currencyAtRight = false;
+    var decimal_degits = 0;
     var refCurrency = database.collection('currencies').where('isActive', '==' , true);
     refCurrency.get().then( async function(snapshots){  
         var currencyData = snapshots.docs[0].data();
         currentCurrency = currencyData.symbol;
         currencyAtRight = currencyData.symbolAtRight;
+  
+        if (currencyData.decimal_degits) {
+            decimal_degits = currencyData.decimal_degits;
+        }
     }); 
 
     var append_list = '';
@@ -238,9 +241,9 @@ $(document).ready(function() {
  
 });
 
- async function getStoreNameFunction(vendorId){
+ async function getStoreNameFunction(resturant_id){
      var vendorName = '';
-        await database.collection('vendors').where('id', '==', vendorId).get().then(async function (snapshots) {
+        await database.collection('vendors').where('id', '==', resturant_id).get().then(async function (snapshots) {
         var vendorData = snapshots.docs[0].data();
 
         vendorName = vendorData.title;
@@ -255,6 +258,8 @@ $(document).ready(function() {
     return vendorName;
 
 }
+
+
 
 function buildHTML(snapshots){
         var html='';
@@ -287,13 +292,13 @@ function buildHTML(snapshots){
                     if (val.discountType =='Percent' || val.discountType =='Percentage') {
                         discount_price = val.discount+"%";
                     }else{
-                        discount_price = val.discount+""+currentCurrency;
+                        discount_price = parseFloat(val.discount).toFixed(decimal_degits) + "" + currentCurrency;
                     }
                 }else{
                     if (val.discountType =='Percent' || val.discountType == 'Percentage') {
                         discount_price = val.discount+"%";
                     }else{
-                        discount_price = currentCurrency+""+val.discount;
+                        discount_price = currentCurrency + "" + parseFloat(val.discount).toFixed(decimal_degits);
                     }
                 }
                 var id = val.id;
@@ -303,10 +308,17 @@ function buildHTML(snapshots){
                 <?php if($id!=''){ ?>
                     route1 =route1+'?eid={{$id}}';
                 <?php }?>
+                html = html + '<td class="delete-all"><input type="checkbox" id="is_open_' + id + '" class="is_open" dataId="' + id + '"><label class="col-3 control-label"\n' +
+                'for="is_open_' + id + '" ></label></td>';
+
                // console.log('val'+JSON.stringify(val));
                 html=html+'<td  data-url="'+route1+'"  class="redirecttopage">'+val.code+'</td>';
                 html=html+'<td>'+discount_price+'</td>';
                 html=html+'<td>'+val.description+'</td>';
+                const store = getStoreName(val.resturant_id);
+            html = html + '<td class="storeName_' + val.resturant_id + '"></td>';
+                
+                
                 var date = '';
                 var time = '';
                 if(val.hasOwnProperty("expiresAt")){
@@ -321,11 +333,11 @@ function buildHTML(snapshots){
                 }else{
                   html = html + '<td></td>';
                 }
-                if(val.isEnabled){
-                  html=html+'<td><span class="badge badge-success">Yes</span></td>';
-                }else{                
-                  html=html+'<td><span class="badge badge-danger">No</span></td>';
-                }
+                if (val.isEnabled) {
+              html = html + '<td><label class="switch"><input type="checkbox" checked id="' + val.id + '" name="isEnabled"><span class="slider round"></span></label></td>';
+            } else {
+              html = html + '<td><label class="switch"><input type="checkbox" id="' + val.id + '" name="isEnabled"><span class="slider round"></span></label></td>';
+            }
 
                 // if(val.hasOwnProperty("updatedAt")){
                 //   var date =  val.updatedAt.toDate().toDateString();
@@ -344,6 +356,61 @@ function buildHTML(snapshots){
           });
           return html;      
 }
+/* toggal publish action code start*/
+$(document).on("click","input[name='isEnabled']",function(e){
+            var ischeck=$(this).is(':checked');
+            var id=this.id;
+            if(ischeck){
+              database.collection('coupons').doc(id).update({'isEnabled': true}).then(function (result) {
+
+              });
+            }else{
+              database.collection('coupons').doc(id).update({'isEnabled': false}).then(function (result) {
+
+              });
+            }
+
+        });
+
+    /*toggal publish action code end*/
+    async function getStoreName(resturant_id) {
+
+var refData = await database.collection('vendors').where("id", "==", resturant_id).get().then(async function (snapshots) {
+
+    var data = snapshots.docs[0].data();
+
+    $('.storeName_' + resturant_id).html(data.title);
+
+
+});
+
+}
+
+
+        $("#is_active").click(function () {
+                $("#couponTable .is_open").prop('checked', $(this).prop('checked'));
+
+            });
+
+            $("#deleteAll").click(function () {
+                if ($('#couponTable .is_open:checked').length) {
+                    if (confirm('Are You Sure want to Delete Selected Data ?')) {
+                        jQuery("#data-table_processing").show();
+                        $('#couponTable .is_open:checked').each(function () {
+                            var dataId = $(this).attr('dataId');
+
+                            database.collection('coupons').doc(dataId).delete().then(function () {
+
+                                window.location.reload();
+                            });
+
+                        });
+
+                    }
+                } else {
+                    alert('Please Select Any One Record .');
+                }
+            });
 
   function prev(){
       if(endarray.length==1){
@@ -473,20 +540,10 @@ function searchtext(){
 }
 
 $(document).on("click","a[name='coupon_delete_btn']", function (e) {
-        var id = this.id;
-
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE',0); ?>";
-    if(is_disable_delete == 1){
-      alert("Do not alllow to change in demo content !");
-      return false;    
-    }
-    
-     database.collection('coupons').doc(id).delete().then(function(){
-
-      window.location = "{{! url()->current() }}";
+		var id = this.id;
+     	database.collection('coupons').doc(id).delete().then(function(){
+      	window.location = "{{! url()->current() }}";
     });
-
-
 });
 
 

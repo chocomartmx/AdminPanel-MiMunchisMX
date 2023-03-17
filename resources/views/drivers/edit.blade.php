@@ -23,7 +23,8 @@
         <div class="row daes-top-sec mb-3">
 
         <div class="col-lg-6 col-md-6">
-          <a href="{{route('restaurants.orders','driverId='.$id)}}">
+          
+          <a href="{{route('orders')}}?driverId={{$id}}">
 
            <div class="card">
 
@@ -155,10 +156,7 @@
 
            
 
-	           <div class="form-check width-100">
-	            	<input type="checkbox" class="col-7 form-check-inline user_active" id="user_active">
-	              <label class="col-3 control-label" for="user_active">{{trans('lang.active')}}</label>
-	           </div> 
+	          
 	             </fieldset>
 
                 <fieldset>
@@ -280,11 +278,25 @@ var carPictureURL ="";
 var placeholderImage = '';
 var placeholder = database.collection('settings').doc('placeHolderImage');
 var user_active_deactivate =false;
+var currentCurrency = '';
+var currencyAtRight = false;
+var decimal_degits = 0;
 placeholder.get().then( async function(snapshotsimage){
     var placeholderImageData = snapshotsimage.data();
     placeholderImage = placeholderImageData.image;
 })
+var refCurrency = database.collection('currencies').where('isActive', '==' , true);
+    var append_list = '';
 
+    refCurrency.get().then(async function (snapshots) {
+        var currencyData = snapshots.docs[0].data();
+        currentCurrency = currencyData.symbol;
+        currencyAtRight = currencyData.symbolAtRight;
+
+        if(currencyData.decimal_degits){
+            decimal_degits = currencyData.decimal_degits;
+        }
+    });
 $(document).ready(function(){
   jQuery("#data-table_processing").show();
   ref.get().then( async function(snapshots){
@@ -336,14 +348,18 @@ if (photo!='' && photo!=null) {
   $(".user_image").append('<img class="rounded" style="width:50px" src="'+placeholderImage+'" alt="image">');
 }
 
-var orderRef = database.collection('vendor_orders').where("driverID","==",id);
+var orderRef = database.collection('restaurant_orders').where("driverID","==",id);
 orderRef.get().then( async function(snapshotsorder){
   var orders = snapshotsorder.size;
   $("#total_orders").text(orders);
 });
-
+if(currencyAtRight){
+  var wallet_amount = parseFloat(user.wallet_amount).toFixed(decimal_degits)+currentCurrency;
+}else{
+  var wallet_amount = currentCurrency+parseFloat(user.wallet_amount).toFixed(decimal_degits);
+}
 if(user.wallet_amount){
-  $('#wallet_amount').text(user.wallet_amount);
+  $('#wallet_amount').text(wallet_amount);
 }
 if(user.userBankDetails){
   if(user.userBankDetails.bankName!=undefined){
@@ -372,14 +388,7 @@ if(user.userBankDetails){
 
   
 $(".save_driver_btn").click(function(){
-//var photo ="https://assets.bonappetit.com/photos/5d03bea59ffc67bff3c6f86e/master/pass/HLY_Lentil_Burger_Horizontal.jpg";
- 
- var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE',0); ?>";
- if(is_disable_delete == 1){
-  alert("Do not alllow to change in demo content !");
-  return false;    
- }
- 
+
  var userFirstName = $(".user_first_name").val();
  var userLastName = $(".user_last_name").val();
  var email = $(".user_email").val();
@@ -472,6 +481,7 @@ function handleFileSelect(evt) {
       var filename = (f.name).replace(/C:\\fakepath\\/i, '')
 
       var timestamp = Number(new Date());      
+      var filename = filename.split('.')[0] + "_" + timestamp + '.' + ext;
       var uploadTask = storageRef.child(filename).put(theFile);
       console.log(uploadTask);
       uploadTask.on('state_changed', function(snapshot){
@@ -531,6 +541,7 @@ function handleFileSelectcar(evt) {
       var filename = (f.name).replace(/C:\\fakepath\\/i, '')
 
       var timestamp = Number(new Date());      
+      var filename = filename.split('.')[0] + "_" + timestamp + '.' + ext;
       var uploadTask = storageRefcar.child(filename).put(theFile);
       console.log(uploadTask);
       uploadTask.on('state_changed', function(snapshot){

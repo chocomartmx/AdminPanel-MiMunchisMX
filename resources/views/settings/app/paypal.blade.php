@@ -276,11 +276,6 @@
 
             $(".save_paypal_btn").click(function () {
 
-                var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-                if (is_disable_delete == 1) {
-                    alert("Do not alllow to change in demo content !");
-                    return false;
-                }
                 var isenabled = $(".enable_paypal").is(":checked");
                 var paypalLive = $(".paypal_live_mode").is(":checked");
                 var paypalAppId = $(".paypal_app_id").val();

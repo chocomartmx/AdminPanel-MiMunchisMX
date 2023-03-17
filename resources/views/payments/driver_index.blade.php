@@ -1,12 +1,6 @@
 @extends('layouts.app')
 
 
-
-<?php 
-
-error_reporting(E_ALL ^ E_NOTICE); 
- ?>
-
 @section('content')
         <div class="page-wrapper">
 
@@ -130,11 +124,17 @@ error_reporting(E_ALL ^ E_NOTICE);
 
     var currentCurrency ='';
     var currencyAtRight = false;
+    var decimal_degits = 0;
+
     var refCurrency = database.collection('currencies').where('isActive', '==' , true);
     refCurrency.get().then( async function(snapshots){
         var currencyData = snapshots.docs[0].data();
         currentCurrency = currencyData.symbol;
         currencyAtRight = currencyData.symbolAtRight;
+
+        if (currencyData.decimal_degits) {
+                decimal_degits = currencyData.decimal_degits;
+            }
     });
 
 $(document).ready(function() {
@@ -333,28 +333,6 @@ function searchtext(){
 
 }
 
-// async function totalPrice(driverID) {
-// var price=0;
-// await database.collection('restaurant_orders').where('driverID','==',driverID).where("status","==","Order Completed").get().then( async function(orderSnapshots){
-            
-//             orderSnapshots.docs.forEach((order)=>{
-
-//               var orderData = order.data();
-              
-//               orderData.products.forEach((product)=> {
-
-//                   if(product.price && product.quantity != 0){
-//                     var productTotal = parseInt(product.price)*parseInt(product.quantity);
-//                     price = price + productTotal;
-//                   }
-//                 })
-
-//             })
-// });
-// jQuery(".name_"+driverID).html(price);
-// return price;
-// }
-
 async function remainingPriceOLD(driverID){
   var paid_price = 0;
   var total_price = 0;
@@ -395,14 +373,22 @@ async function remainingPriceOLD(driverID){
             if(Number.isNaN(remaining)){
                 remaining=0;
             }
-            if(currencyAtRight){
-                total_price_val = total_price+""+currentCurrency;
-                paid_price_val = paid_price+""+currentCurrency;
-                remaining_val = remaining+""+currentCurrency;
-            }else{
-                 total_price_val = currentCurrency+""+total_price;
-                 paid_price_val = currentCurrency+""+paid_price;
-                 remaining_val = currentCurrency+""+remaining;
+            if (currencyAtRight) {
+
+            total_price_val = parseFloat(total_price).toFixed(decimal_degits) + "" + currentCurrency;
+
+            paid_price_val = parseFloat(paid_price).toFixed(decimal_degits) + "" + currentCurrency;
+
+            remaining_val = parseFloat(remaining).toFixed(decimal_degits) + "" + currentCurrency;
+
+            } else {
+
+            total_price_val = currentCurrency + "" + parseFloat(total_price).toFixed(decimal_degits);
+
+            paid_price_val = currentCurrency + "" + parseFloat(paid_price).toFixed(decimal_degits);
+
+            remaining_val = currentCurrency + "" + parseFloat(remaining).toFixed(decimal_degits);
+
             }
             jQuery(".total_"+driverID).html(total_price_val);
             jQuery(".name_"+driverID).html(paid_price_val);
@@ -467,23 +453,23 @@ async function remainingPrice(driverID){
 
             }
 
-            if(currencyAtRight){
+            if (currencyAtRight) {
 
-                total_price_val = total_price+""+currentCurrency;
+                total_price_val = parseFloat(total_price).toFixed(decimal_degits) + "" + currentCurrency;
 
-                paid_price_val = paid_price+""+currentCurrency;
+                paid_price_val = parseFloat(paid_price).toFixed(decimal_degits) + "" + currentCurrency;
 
-                remaining_val = remaining+""+currentCurrency;
+                remaining_val = parseFloat(remaining).toFixed(decimal_degits) + "" + currentCurrency;
 
-            }else{
+                } else {
 
-                 total_price_val = currentCurrency+""+total_price;
+                total_price_val = currentCurrency + "" + parseFloat(total_price).toFixed(decimal_degits);
 
-                 paid_price_val = currentCurrency+""+paid_price;
+                paid_price_val = currentCurrency + "" + parseFloat(paid_price).toFixed(decimal_degits);
 
-                 remaining_val = currentCurrency+""+remaining;
+                remaining_val = currentCurrency + "" + parseFloat(remaining).toFixed(decimal_degits);
 
-            }
+                }
 
             jQuery(".total_"+driverID).html(total_price_val);
 

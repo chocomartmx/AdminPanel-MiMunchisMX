@@ -88,11 +88,6 @@
 
         $(".save_admin_settings").click(function(){
 
-          var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE',0); ?>";
-          if(is_disable_delete == 1){
-            alert("Do not alllow to change in demo content !");
-            return false;    
-          }
           var checkboxValue = $("#vendor_can_modify").is(":checked");
           var delivery_charges_per_km = parseInt($("#delivery_charges_per_km").val());
           var minimum_delivery_charges = parseInt($("#minimum_delivery_charges").val());

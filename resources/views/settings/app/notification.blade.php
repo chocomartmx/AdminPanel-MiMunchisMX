@@ -177,12 +177,6 @@
 
             $(".notification_save_btn").click(function () {
 
-                var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-                if (is_disable_delete == 1) {
-                    alert("Do not alllow to change in demo content !");
-                    return false;
-                }
-
                 var isEnabled = $(".enable_pushnotification").is(":checked");
                 var fcmKey = $(".fcm_key").val();
                 var firebaseApiKey = $(".firebase_api_key").val();

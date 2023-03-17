@@ -44,12 +44,12 @@
                       </div>
                     </div>
 
-                    <div class="form-group row width-100">
+                    <!-- <div class="form-group row width-100">
                         <label class="col-4 control-label">{{ trans('lang.deliveryCharge')}}</label>
                         <div class="col-7">
                           <input type="number" class="form-control deliveryCharge">
                         </div>
-                    </div>
+                    </div> -->
 
                     
 
@@ -108,19 +108,14 @@
 
         $(".save_admin_commission").click(function(){
 
-          var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE',0); ?>";
-          if(is_disable_delete == 1){
-            alert("Do not alllow to change in demo content !");
-            return false;    
-          }
           var checkboxValue = $("#enable_commission").is(":checked");
-          var deliveryCharge = parseInt($(".deliveryCharge").val());
+          /*var deliveryCharge = parseInt($(".deliveryCharge").val());*/
           var commission_type = $("#commission_type").val();
           var howmuch = parseInt($(".commission_fix").val());
               database.collection('settings').doc("AdminCommission").update({'isEnabled':checkboxValue,'fix_commission':howmuch,'commissionType':commission_type}).then(function(result) {
-                        database.collection('settings').doc("DeliveryCharge").update({'amount':deliveryCharge}).then(function(result) {
+                        /*database.collection('settings').doc("DeliveryCharge").update({'amount':deliveryCharge}).then(function(result) {*/
                             window.location.href = '{{ url("settings/app/adminCommission")}}';
-                        });
+                        /*});*/
                 });
 
                     

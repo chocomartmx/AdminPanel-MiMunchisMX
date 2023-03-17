@@ -1,12 +1,6 @@
 @extends('layouts.app')
 
 
-
-<?php 
-
-error_reporting(E_ALL ^ E_NOTICE); 
- ?>
-
 @section('content')
         <div class="page-wrapper">
 
@@ -81,11 +75,16 @@ error_reporting(E_ALL ^ E_NOTICE);
                                         <thead>
 
                                             <tr>
+                                            <th class="delete-all"><input type="checkbox" id="is_active"><label
+                                            class="col-3 control-label" for="is_active">
+                                        <a id="deleteAll" class="do_not_delete" href="javascript:void(0)"><i
+                                                    class="fa fa-trash"></i> {{trans('lang.all')}}</a></label></th>
 
                                                 <th>{{trans('lang.category_image')}}</th>
 
                                                 <th>{{trans('lang.faq_category_name')}}</th>
-
+                                                <th>{{trans('lang.food_plural')}}</th>
+                                                <th> {{trans('lang.item_publish')}}</th>
                                                 <th>{{trans('lang.actions')}}</th>
 
                                             </tr>
@@ -169,7 +168,6 @@ error_reporting(E_ALL ^ E_NOTICE);
             if(snapshots.docs.length < pagesize){
                 jQuery("#data-table_paginate").hide();
             }
-            disableClick();
          }
       }); 
      
@@ -196,13 +194,27 @@ function buildHTML(snapshots){
                 var id = val.id;
                 var route1 =  '{{route("categories.edit",":id")}}';
                 route1 = route1.replace(':id', id);
+                html = html + '<td class="delete-all"><input type="checkbox" id="is_open_' + id + '" class="is_open" dataId="' + id + '"><label class="col-3 control-label"\n' +
+                'for="is_open_' + id + '" ></label></td>';
+                
                 if(val.photo == ''){                 
                     html=html+'<td><img class="rounded" style="width:50px" src="'+placeholderImage+'" alt="image"></td>';
                 }else{
                     html=html+'<td><img class="rounded" style="width:50px" src="'+val.photo+'" alt="image"></td>';
                 }
+                
+                html=html+'<td data-url="'+route1+'" class="redirecttopage"><a href="'+route1+'">'+val.title+'</a></td>';
+                getProductTotal(val.id);
+            var categoryId = val.id;
+            var url = '{{url("foods?categoryID=id")}}';
+            url = url.replace("id", categoryId);
 
-                html=html+'<td>'+val.title+'</td>';
+            html = html + '<td ><a class="product_' + val.id + '" href="' + url + '"></a></td>';
+                if (val.publish) {
+                html = html + '<td><label class="switch"><input type="checkbox" checked id="' + val.id + '" name="publish"><span class="slider round"></span></label></td>';
+            } else {
+                html = html + '<td><label class="switch"><input type="checkbox" id="' + val.id + '" name="publish"><span class="slider round"></span></label></td>';
+            }
                 html=html+'<td class="action-btn"><a href="'+route1+'"><i class="fa fa-edit"></i></a><a id="'+val.id+'" name="category-delete" class="do_not_delete" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>';
                 
                             
@@ -211,6 +223,18 @@ function buildHTML(snapshots){
                 count =count +1;
           });
           return html;      
+}
+async function getProductTotal(id, section_id) {
+
+var vendor_products = database.collection('vendor_products').where('categoryID', '==', id);
+if (section_id) {
+    vendor_products = vendor_products.where('section_id', '==', section_id)
+}
+await vendor_products.get().then(async function (productSnapshots) {
+    var Product_total = productSnapshots.docs.length;
+
+    jQuery(".product_" + id).html(Product_total);
+});
 }
 
 
@@ -321,25 +345,51 @@ function searchtext(){
 }
 
 $(document).on("click","a[name='category-delete']", function (e) {
+    var id = this.id;
+    database.collection('vendor_categories').doc(id).delete().then(function(result) { 
+      window.location.href = '{{ route("categories")}}';
+    });
+});
+
+$("#is_active").click(function () {
+        $("#example24 .is_open").prop('checked', $(this).prop('checked'));
+
+    });
+    $("#deleteAll").click(function () {
+        if ($('#example24 .is_open:checked').length) {
+            if (confirm('Are You Sure want to Delete Selected Data ?')) {
+                jQuery("#data-table_processing").show();
+                $('#example24 .is_open:checked').each(function () {
+                    var dataId = $(this).attr('dataId');
+                    console.log(dataId);
+                    database.collection('vendor_categories').doc(dataId).delete().then(function () {
+                        window.location.reload();
+                    });
+
+                });
+
+            }
+        } else {
+            alert('Please Select Any One Record .');
+        }
+    });
+/* toggal publish action code start*/
+$(document).on("click", "input[name='publish']", function (e) {
+        var ischeck = $(this).is(':checked');
         var id = this.id;
-        database.collection('vendor_categories').doc(id).delete().then(function(result) { 
-          window.location.href = '{{ route("categories")}}';
-        });
-});
+        if (ischeck) {
+            database.collection('vendor_categories').doc(id).update({'publish': true}).then(function (result) {
 
-     function disableClick(){
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE',0); ?>";
-    if(is_disable_delete == 1){
-        jQuery("a.do_not_delete").removeAttr("name");
-        jQuery("a.do_not_delete").attr("name","alert_demo");       
-    }
-}
+            });
+        } else {
+            database.collection('vendor_categories').doc(id).update({'publish': false}).then(function (result) {
 
+            });
+        }
 
-$(document).on("click","a[name='alert_demo']", function (e) {
-    alert(doNotDeleteAlert);
-});
+    });
 
+    /*toggal publish action code end*/
 
 </script>
 

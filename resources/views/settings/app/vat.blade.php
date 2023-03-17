@@ -99,11 +99,6 @@
 
             $(".save_vat_table_btn").click(function () {
 
-                var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE', 0); ?>";
-                if (is_disable_delete == 1) {
-                    alert("Do not alllow to change in demo content !");
-                    return false;
-                }
                 var checkboxValue = $("#vat_enabled").is(":checked");
                 var label = $(".vat_label").val();
                 var tax = $(".vat_tax").val();

@@ -104,7 +104,7 @@
 
                        <div class="form-check width-100">
                           <input type="checkbox" class="col-7 form-check-inline user_active" id="user_active">
-                          <label class="col-3 control-label" for="user_active">{{trans('lang.active')}}</label>
+                          <label class="col-3 control-label" for="user_active">{{trans('lang.available')}}</label>
                        </div> 
                      </fieldset>
 
@@ -281,7 +281,8 @@ function handleFileSelect(evt) {
       var docName=val.split('fakepath')[1];
       var filename = (f.name).replace(/C:\\fakepath\\/i, '')
 
-      var timestamp = Number(new Date());      
+      var timestamp = Number(new Date());    
+      var filename = filename.split('.')[0] + "_" + timestamp + '.' + ext;  
       var uploadTask = storageRef.child(filename).put(theFile);
       console.log(uploadTask);
       uploadTask.on('state_changed', function(snapshot){
@@ -340,6 +341,7 @@ function handleFileSelectcar(evt) {
       var filename = (f.name).replace(/C:\\fakepath\\/i, '')
 
       var timestamp = Number(new Date());      
+      var filename = filename.split('.')[0] + "_" + timestamp + '.' + ext;
       var uploadTask = storageRefcar.child(filename).put(theFile);
       console.log(uploadTask);
       uploadTask.on('state_changed', function(snapshot){

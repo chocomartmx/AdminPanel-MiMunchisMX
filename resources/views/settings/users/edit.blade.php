@@ -307,6 +307,9 @@
 	var id = "<?php echo $id;?>";
 	var database = firebase.firestore();
 	var ref = database.collection('users').where("id","==",id);
+	var currentCurrency = '';
+	var currencyAtRight = false;
+	var decimal_degits = 0;
 
 	var photo ="";
 	var placeholderImage = '';
@@ -316,6 +319,19 @@
         var placeholderImageData = snapshotsimage.data();
         placeholderImage = placeholderImageData.image;
     })
+	var refCurrency = database.collection('currencies').where('isActive', '==' , true);
+    var append_list = '';
+
+    refCurrency.get().then(async function (snapshots) {
+        var currencyData = snapshots.docs[0].data();
+        currentCurrency = currencyData.symbol;
+        currencyAtRight = currencyData.symbolAtRight;
+
+        if(currencyData.decimal_degits){
+            decimal_degits = currencyData.decimal_degits;
+        }
+    });
+
 	$(document).ready(function(){
 
  		jQuery("#data-table_processing").show();
@@ -362,12 +378,16 @@
 		  $(".user_active").prop('checked',true);
 		}
 
+		if(currencyAtRight){
+			var wallet_amount = parseFloat(user.wallet_amount).toFixed(decimal_degits)+currentCurrency;
+			}else{
+			var wallet_amount = currentCurrency+parseFloat(user.wallet_amount).toFixed(decimal_degits);
+			}
 
-		var  wallet = user.wallet_amount;
 
-		if(wallet != undefined){
+		if(wallet_amount != undefined){
 
-			$("#wallet_amount").text(wallet.toFixed(2));
+			$("#wallet_amount").text(wallet_amount);
 		}
 
 		var orderRef = database.collection('restaurant_orders').where("authorID","==",id);
@@ -379,23 +399,6 @@
 
 		});
 		
-		/*if(user.userBankDetails){
-			if(user.userBankDetails.bankName!=undefined){
-				$("#bankName").val(user.userBankDetails.bankName);
-			}
-			if(user.userBankDetails.branchName!=undefined){
-				$("#branchName").val(user.userBankDetails.branchName);
-			}
-			if(user.userBankDetails.holderName!=undefined){
-				$("#holderName").val(user.userBankDetails.holderName);
-			}
-			if(user.userBankDetails.accountNumber!=undefined){
-				$("#accountNumber").val(user.userBankDetails.accountNumber);
-			}
-			if(user.userBankDetails.otherDetails!=undefined){
-				$("#otherDetails").val(user.userBankDetails.otherDetails);
-			}
-		}*/
 
   	jQuery("#data-table_processing").hide();
  
@@ -424,12 +427,6 @@ $(".save_user_btn").click(function(){
 
 	var location = {'latitude':latitude ,'longitude':longitude };
 	var shippingAddress = { 'city': city,'country': country,'email': email,'line1': address_line1,'line2': address_line2,'location': location, 'name': name,'postalCode': postalcode};
-
-	var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE',0); ?>";
-    if(is_disable_delete == 1){
-        alert("Do not alllow to change in demo content !");
-        return false;    
-    }
 
  	if(userFirstName == ''){
         $(".error_top").show();
@@ -520,7 +517,8 @@ function handleFileSelect(evt) {
       var docName=val.split('fakepath')[1];
       var filename = (f.name).replace(/C:\\fakepath\\/i, '')
 
-      var timestamp = Number(new Date());      
+      var timestamp = Number(new Date());     
+	  var filename = filename.split('.')[0] + "_" + timestamp + '.' + ext; 
       var uploadTask = storageRef.child(filename).put(theFile);
       console.log(uploadTask);
       uploadTask.on('state_changed', function(snapshot){

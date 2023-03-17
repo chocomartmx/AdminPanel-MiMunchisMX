@@ -1,11 +1,5 @@
 @extends('layouts.app')
 
-<?php 
-
-error_reporting(E_ALL ^ E_NOTICE); 
-
- ?>
-
 @section('content')
 
         <div class="page-wrapper">
@@ -80,7 +74,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 
 
-      
+
 
 
 
@@ -123,7 +117,24 @@ error_reporting(E_ALL ^ E_NOTICE);
                             <div class="card-body">
 
                             <div id="data-table_processing" class="dataTables_processing panel panel-default" style="display: none;">{{trans('lang.processing')}}</div>
+                            <div id="users-table_filter" class="pull-right">
+                            <div class="row">
 
+                                <div class="col-sm-9">
+                                    <label>{{ trans('lang.search_by')}}
+                                        <select name="selected_search" id="selected_search" class="form-control input-sm">
+                                            <option value="title">{{ trans('lang.title')}}</option>
+                                        </select>
+                                        <div class="form-group">
+                                            <input type="search" id="search" class="search form-control"
+                                                placeholder="Search" aria-controls="users-table">
+                                    </label>&nbsp;<button onclick="searchtext();" class="btn btn-warning btn-flat">Search
+                                    </button>&nbsp;<button onclick="searchclear();" class="btn btn-warning btn-flat">Clear
+                                    </button>
+                                </div>
+                            </div>
+                            </div>
+                            </div>
 
                                 <div class="table-responsive m-t-10">
 
@@ -136,13 +147,14 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 
                                             <tr>
-
-
+                                              <th class="delete-all"><input type="checkbox" id="is_active"><label
+                                            class="col-3 control-label" for="is_active">
+                                    <a id="deleteAll" class="do_not_delete" href="javascript:void(0)">
+                                        <i class="fa fa-trash"></i> {{trans('lang.all')}}</a></label></th>
 
                                                 <th>{{trans('lang.photo')}}</th>
-
                                                 <th>{{trans('lang.title')}}</th>
-
+                                                <th>{{trans('lang.banner_position')}}</th>
                                                 <th>{{trans('lang.publish')}}</th>
 
 
@@ -228,12 +240,12 @@ error_reporting(E_ALL ^ E_NOTICE);
 
    <script type="text/javascript">
 
-  
+
     var database = firebase.firestore();
 
     var offest=1;
 
-    var pagesize=10; 
+    var pagesize=10;
 
     var end = null;
 
@@ -264,19 +276,19 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 $(document).ready(function() {
 
-	
+
 
     var inx= parseInt(offest) * parseInt(pagesize);
 
     jQuery("#data-table_processing").show();
 
-  
+
 
     append_list = document.getElementById('append_vendors');
 
     append_list.innerHTML='';
 
-    refData.limit(pagesize).get().then( async function(snapshots){  
+    refData.limit(pagesize).get().then( async function(snapshots){
 
     html='';
 
@@ -298,7 +310,6 @@ $(document).ready(function() {
 
         }
 
-        disableClick();
 
     }
 
@@ -329,7 +340,7 @@ $(document).ready(function() {
          snapshots.docs.forEach( async(listval) => {
 
             var listval=listval.data();
-            
+
             var val=listval;
 
             val.id=listval.id;
@@ -343,7 +354,8 @@ $(document).ready(function() {
                 var route1 =  '{{route("setting.banners.edit",":id")}}';
 
                 route1 = route1.replace(':id', id);
-
+                html = html + '<td class="delete-all"><input type="checkbox" id="is_open_' + id + '" class="is_open" dataId="' + id + '" style="width:30px;"><label class="col-3 control-label"\n' +
+               'for="is_open_' + id + '" ></label></td>';
                 if (val.photo!='') {
 
                     html=html+'<td><img alt="" width="100%" style="width:70px;height:70px;" src="'+val.photo+'" alt="image"></td>';
@@ -354,17 +366,24 @@ $(document).ready(function() {
 
                 }
 
-                html=html+'<td>'+val.title+'</td>';
+                html=html+'<td><a href="'+route1+'">'+val.title+'</a></td>';
+                html=html+'<td>'+val.position+'</td>';
 
-                if(val.is_publish){
+                // if(val.is_publish){
 
-                    html=html+'<td><span class="badge badge-success">Yes</span></td>';
+                //     html=html+'<td><span class="badge badge-success">Yes</span></td>';
 
-                }else{                
+                // }else{
 
-                    html=html+'<td><span class="badge badge-danger">No</span></td>';
+                //     html=html+'<td><span class="badge badge-danger">No</span></td>';
 
-                }
+                // }
+
+            if (val.is_publish) {
+              html = html + '<td><label class="switch"><input type="checkbox" checked id="' + val.id + '" name="publish"><span class="slider round"></span></label></td>';
+            } else {
+              html = html + '<td><label class="switch"><input type="checkbox" id="' + val.id + '" name="publish"><span class="slider round"></span></label></td>';
+            }
 
                 html=html+'<td class="vendor-action-btn"><a href="'+route1+'"><i class="fa fa-edit"></i></a><a id="'+val.id+'" name="vendor-delete" class="do_not_delete" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>';
 
@@ -375,10 +394,52 @@ $(document).ready(function() {
 
           });
 
-          return html;      
+          return html;
 
 }
 
+    /* toggal publish action code start*/
+        $(document).on("click","input[name='publish']",function(e){
+            var ischeck=$(this).is(':checked');
+            var id=this.id;
+            if(ischeck){
+              database.collection('menu_items').doc(id).update({'is_publish': true}).then(function (result) {
+
+              });
+            }else{
+              database.collection('menu_items').doc(id).update({'is_publish': false}).then(function (result) {
+
+              });
+            }
+
+        });
+
+    /*toggal publish action code end*/
+
+$("#is_active").click(function () {
+      $("#example24 .is_open").prop('checked', $(this).prop('checked'));
+
+  });
+
+  $("#deleteAll").click(function () {
+      if ($('#example24 .is_open:checked').length) {
+          if (confirm('Are You Sure want to Delete Selected Data ?')) {
+              jQuery("#data-table_processing").show();
+              $('#example24 .is_open:checked').each(function () {
+                  var dataId = $(this).attr('dataId');
+
+                  database.collection('menu_items').doc(dataId).delete().then(function () {
+                      window.location.reload();
+
+                  });
+
+              });
+
+          }
+      } else {
+          alert('Please Select Any One Record .');
+      }
+  });
 
 async function next(){
 
@@ -404,7 +465,7 @@ async function next(){
 
           listener.then( async(snapshots) => {
 
-            
+
 
                 html='';
 
@@ -450,7 +511,7 @@ async function prev(){
 
     end=endarray[endarray.length-2];
 
-  
+
 
   if(end!=undefined || end!=null){
 
@@ -468,7 +529,7 @@ async function prev(){
 
                 }
 
-                
+
 
                 listener.then(async(snapshots) => {
 
@@ -488,15 +549,15 @@ async function prev(){
 
 
 
-                    if(snapshots.docs.length < pagesize){ 
+                    if(snapshots.docs.length < pagesize){
 
-   
+
 
                         jQuery("#users_table_previous_btn").hide();
 
                     }
 
-                    
+
 
                 }
 
@@ -504,7 +565,7 @@ async function prev(){
 
   }
 
-} 
+}
 
 
 
@@ -524,13 +585,13 @@ function searchtext(){
 
    if(jQuery("#selected_search").val()=='title' && jQuery("#search").val().trim()!=''){
 
-            console.log(jQuery("#search").val());     
+            console.log(jQuery("#search").val());
 
      wherequery=refData.orderBy('title').limit(pagesize).startAt(jQuery("#search").val()).endAt(jQuery("#search").val()+'\uf8ff').get();
 
    }
 
-  
+
 
   else{
 
@@ -538,7 +599,7 @@ function searchtext(){
 
   }
 
-  
+
 
   wherequery.then((snapshots) => {
 
@@ -556,9 +617,9 @@ function searchtext(){
 
         endarray.push(snapshots.docs[0]);
 
-        if(snapshots.docs.length < pagesize){ 
+        if(snapshots.docs.length < pagesize){
 
-   
+
 
             jQuery("#data-table_paginate").hide();
 
@@ -572,7 +633,7 @@ function searchtext(){
 
     }
 
-}); 
+});
 
 
 
@@ -589,38 +650,15 @@ function searchclear(){
 }
 
 
-
-     function disableClick(){
-
-    var is_disable_delete = "<?php echo env('IS_DISABLE_DELETE'); ?>";
-
-    if(is_disable_delete == 1){
-
-        jQuery("a.do_not_delete").removeAttr("name");
-
-        jQuery("a.do_not_delete").attr("name","alert_demo");       
-
-    }
-
-}
-
-$(document).on("click","a[name='alert_demo']", function (e) {
-
-alert(doNotDeleteAlert);
-
-});
-
-
 $(document).on("click","a[name='vendor-delete']", function (e) {
     var id = this.id;
-   
+
     database.collection('menu_items').doc(id).delete().then(function(){
            window.location.reload();
-    }); 
-}); 
+    });
+});
 
 
 </script>
 
 @endsection
-

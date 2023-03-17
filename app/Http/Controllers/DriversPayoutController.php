@@ -11,16 +11,16 @@ class DriversPayoutController extends Controller
         $this->middleware('auth');
     }
     
-    public function index()
+    public function index($id='')
     {
 
-       return view("drivers_payouts.index");
+       return view("drivers_payouts.index")->with('id',$id);
     }
 
-    public function create()
+    public function create($id='')
     {
         
-       return view("drivers_payouts.create");
+       return view("drivers_payouts.create")->with('id',$id);
     }
 
 }
